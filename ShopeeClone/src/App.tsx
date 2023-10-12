@@ -1,10 +1,8 @@
 import 'react-toastify/dist/ReactToastify.css'
+import useRouterElement from './useRouterElement'
 function App() {
-  return (
-    <div>
-      <h1 className='text-red-600'>hello</h1>
-    </div>
-  )
+  const router = useRouterElement()
+  return <div>{router}</div>
 }
 
 export default App

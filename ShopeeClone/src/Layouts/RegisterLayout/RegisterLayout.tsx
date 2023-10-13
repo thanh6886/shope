@@ -1,3 +1,16 @@
-export default function RegisterLayout() {
-  return <div>RegisterLayout</div>
+import Footer from 'src/Component/Footer'
+import Navbar from 'src/Component/NavBar'
+
+interface Props {
+  children?: React.ReactNode
+}
+
+export default function RegisterLayout({ children }: Props) {
+  return (
+    <div>
+      <Navbar />
+      {children}
+      <Footer />
+    </div>
+  )
 }

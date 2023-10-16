@@ -1,8 +1,10 @@
 import type { RegisterOptions, UseFormGetValues } from 'react-hook-form'
-
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { type } from 'os'
 type Rules = { [key in 'email' | 'password' | 'password_Confing']?: RegisterOptions }
 
-export const rules: Rules = {
+export const getRules = (getValues: UseFormGetValues<any>): Rules => ({
   email: {
     required: {
       value: true,
@@ -47,6 +49,23 @@ export const rules: Rules = {
     minLength: {
       value: 6,
       message: 'Độ dài từ 6 - 160 ký tự'
-    }
+    },
+    validate: (v) => v === getValues('password') || 'PASS không khớp'
   }
-}
+})
+
+export const schema = yup.object({
+  email: yup.string().required('Email là bắt buộc').email('Email không đúng định dạng'),
+  password: yup.string().required('password là bắt bộc').min(6, 'độ dài từ 6-12 ký tự').max(12, 'độ dài từ 6-12 ký tự'),
+  password_Confing: yup
+    .string()
+    .required('nhập lại password là bắt bộc')
+    .min(6, 'độ dài từ 6-12 ký tự ')
+    .max(12, 'độ dài từ 6-12 ký tự')
+    .oneOf([yup.ref('password')], 'password không khớp') //ref tham chiếu đến value của password oneOf cho giá trị === value(password)
+})
+
+export const login = schema.omit(['password_Confing'])
+
+export type LoginSchema = yup.InferType<typeof login>
+export type Schema = yup.InferType<typeof schema>

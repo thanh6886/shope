@@ -1,28 +1,46 @@
 import { Link } from 'react-router-dom'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { LoginSchema, login } from 'src/Component/Ruler/Ruler'
+import Inputs from 'src/Component/Input'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors }
+  } = useForm<LoginSchema>({
+    resolver: yupResolver(login)
+  })
+  const onSubmit = handleSubmit((data) => {
+    console.log(data)
+  })
+
   return (
     <div className='bg-orange'>
-      <div className='container'>
+      <div className='max-w-7xl mx-auto px-4'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
-            <form className='rounded bg-white p-10 shadow-sm' noValidate>
+            <form className='rounded bg-white p-10 shadow-sm' noValidate onSubmit={onSubmit}>
               <div className='text-2xl'>Đăng nhập</div>
-              <input
-                name='email'
+              <Inputs
                 type='email'
-                placeholder='Email'
-                className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+                placeholder='email'
+                className='mt-6'
+                messenger={errors.email?.message}
+                name='email'
+                register={register}
               />
-              <div className='mt-1 text-red-500 min-h-[1rem] text-sm'>Email không hợp lệ</div>
-              <input
-                name='password'
+              <Inputs
                 type='password'
-                placeholder='Password'
-                className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm'
+                placeholder='password'
+                className='mt-2'
+                messenger={errors.password?.message}
+                name='password'
+                register={register}
               />
-              <div className='mt-1 text-red-500 min-h-[1rem] text-sm'>Pass không đúng</div>
-              <div className='mt-3'>
+              <div className='mt-2'>
                 <button className='flex  w-full items-center justify-center bg-orange py-4 px-2 text-sm uppercase text-white hover:bg-red-600'>
                   đăng nhập
                 </button>

@@ -12,7 +12,12 @@ export default function Navbar() {
               </g>
             </svg>
           </Link>
-          <div className=' ml-5 text-2xl lg:text-3xl'>Đăng Ký </div>
+          <div className=' ml-5 text-2xl lg:text-3xl'>Đăng Nhập </div>
+          <div className='text-red-400 ml-[700px] m-auto text-2xl lg:h-11 hover:text-red-700'>
+            <a href='https://help.shopee.vn/vn/s' target='_blank' rel='noopener noreferrer'>
+              Bạn cần giúp đỡ?
+            </a>
+          </div>
         </nav>
       </div>
     </header>

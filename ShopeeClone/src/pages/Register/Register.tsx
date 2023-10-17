@@ -1,9 +1,12 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Schema, schema } from 'src/Component/Ruler/Ruler'
 import Inputs from 'src/Component/Input'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { LoginSchema } from 'src/Component/Ruler/Ruler'
+import { useMutation } from '@tanstack/react-query'
+import { registerAccount } from 'src/apis/auth.api'
+import { omit } from 'lodash'
 export default function Register() {
   const {
     register,
@@ -13,8 +16,15 @@ export default function Register() {
   } = useForm<Schema>({
     resolver: yupResolver(schema)
   })
+  const registerAccontMutation = useMutation({
+    mutationFn: (body: LoginSchema) => registerAccount(body)
+  })
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
+    const body = omit(data, ['password_Confing'])
+    registerAccontMutation.mutate(body, {
+      onSuccess: (data) => console.log(data)
+    })
   })
 
   return (

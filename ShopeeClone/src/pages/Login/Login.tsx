@@ -7,11 +7,13 @@ import { loginAccount } from 'src/apis/auth.api'
 import { useMutation } from '@tanstack/react-query'
 import { any } from 'prop-types'
 import { ResponseApi } from 'src/types/utils.type'
-
+import { isAxiosErrorUnprocessableEntity } from 'src/Component/Ruler/utils'
+import { toast } from 'react-toastify'
 export default function Login() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm<LoginSchema>({
     resolver: yupResolver(login)
@@ -26,9 +28,20 @@ export default function Login() {
       onSuccess: (data) => {
         console.log(data)
         console.log(data.data.message)
+        toast.success(`${data.data.message}`, { autoClose: 3000 })
       },
-      onError: (data) => {
-        console.log(data)
+      onError: (error) => {
+        if (isAxiosErrorUnprocessableEntity<ResponseApi<LoginSchema>>(error)) {
+          const loginForm = error.response?.data.data
+          console.log(loginForm)
+          for (const key in loginForm) {
+            setError(key as keyof LoginSchema, {
+              message: loginForm[key as keyof LoginSchema],
+              type: 'Sever'
+            })
+          }
+          toast.error(`${loginForm?.password}`, { autoClose: 7000 })
+        }
       }
     })
   })

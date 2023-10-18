@@ -8,11 +8,17 @@ import { LoginSchema } from 'src/Component/Ruler/Ruler'
 import { useMutation } from '@tanstack/react-query'
 import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
+import { AxiosError } from 'axios'
+import { isAxiosErrorUnprocessableEntity } from 'src/Component/Ruler/utils'
+import { ResponseApi } from 'src/types/utils.type'
+import { type } from 'os'
+import { toast } from 'react-toastify'
 
 export default function Register() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm<Schema>({
     resolver: yupResolver(schema)
@@ -27,9 +33,20 @@ export default function Register() {
       onSuccess: (data) => {
         console.log(data)
         console.log(data.data.message)
+        toast.success(`${data.data.message}`, { autoClose: 3000 })
       },
-      onError(e) {
-        console.log(e)
+      onError: (error) => {
+        if (isAxiosErrorUnprocessableEntity<ResponseApi<LoginSchema>>(error)) {
+          const formError = error.response?.data.data
+          console.log(typeof formError)
+          for (const key in formError) {
+            setError(key as keyof LoginSchema, {
+              message: formError[key as keyof LoginSchema],
+              type: 'Sever'
+            })
+          }
+          toast.error(`${formError?.email}`, { autoClose: 7000 })
+        }
       }
     })
   })

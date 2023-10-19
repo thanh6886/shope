@@ -44,7 +44,7 @@ export default function NavHeader() {
         </svg>
       </Popover>
 
-      <Popover
+      {/* <Popover
         className='ml-6 flex cursor-pointer items-center py-1 hover:text-black'
         renderPopover={
           <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
@@ -66,17 +66,17 @@ export default function NavHeader() {
           </svg>
         </div>
         <div>Bé Hằng</div>
-      </Popover>
+      </Popover> */}
 
-      {/* <div className='flex items-center'>
-        <Link to='/register' className='mx-3 capitalize hover:text-white/70'>
+      <div className='flex items-center'>
+        <Link to='/register' className='mx-3 capitalize hover:text-black'>
           Đăng ký
         </Link>
         <div className='h-4 border-r-[1px] border-r-white/40' />
-        <Link to='/login' className='mx-3 capitalize hover:text-white/70'>
+        <Link to='/login' className='mx-3 capitalize hover:text-black'>
           Đăng nhập
         </Link>
-      </div> */}
+      </div>
     </div>
   )
 }

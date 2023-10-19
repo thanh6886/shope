@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom'
+import { Link, useMatch } from 'react-router-dom'
 
 export default function Navbar() {
+  const registerMacth = useMatch('/register')
+  const isRegister = Boolean(registerMacth)
   return (
     <header className='py-5 bg-slate-100'>
       <div className='max-w-7xl mx-auto px-4'>
@@ -12,7 +14,7 @@ export default function Navbar() {
               </g>
             </svg>
           </Link>
-          <div className=' ml-5 text-2xl lg:text-3xl'>Đăng Nhập </div>
+          <div className=' ml-5 text-xs lg:text-3xl'>{isRegister ? 'Đăng Ký' : 'Đăng Nhập'}</div>
           {/* <div className='text-red-400 ml-[700px] m-auto text-2xl lg:h-11 hover:text-red-700'>
             <a href='https://help.shopee.vn/vn/s' target='_blank' rel='noopener noreferrer'>
               Bạn cần giúp đỡ?

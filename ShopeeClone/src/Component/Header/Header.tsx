@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom'
 import { useFloating } from '@floating-ui/react'
 import NavHeader from '../NavHeader'
 import Popover from '../Porpver'
+import { useMutation } from '@tanstack/react-query'
+import { useContext } from 'react'
+import { AppContext } from 'src/Contexts/app.Contexts'
+import { toast } from 'react-toastify'
 
 export default function Header() {
   return (
@@ -29,13 +33,12 @@ export default function Header() {
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
                   viewBox='0 0 24 24'
-                  stroke-width='1.5'
                   stroke='currentColor'
                   className='w-6 h-6'
                 >
                   <path
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
                     d='M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z'
                   />
                 </svg>
@@ -46,7 +49,7 @@ export default function Header() {
             <Popover // dỏ hàng
               renderPopover={
                 <div className='relative  max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
-                  {/* <div className='p-2'>
+                  <div className='p-2'>
                     <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
                     <div className='mt-5'></div>
                     <div className='mt-6 flex items-center justify-between'>
@@ -55,7 +58,7 @@ export default function Header() {
                         Xem giỏ hàng
                       </Link>
                     </div>
-                  </div> */}
+                  </div>
 
                   <div className='flex h-[300px] w-[300px] flex-col items-center justify-center p-2'>
                     <img src='' alt='no purchase' className='h-24 w-24' />

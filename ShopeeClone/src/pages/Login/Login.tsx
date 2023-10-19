@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { LoginSchema, login } from 'src/Component/Ruler/Ruler'
 import Inputs from 'src/Component/Input'
@@ -9,7 +9,12 @@ import { any } from 'prop-types'
 import { ResponseApi } from 'src/types/utils.type'
 import { isAxiosErrorUnprocessableEntity } from 'src/Component/Ruler/utils'
 import { toast } from 'react-toastify'
+import { useContext } from 'react'
+import { AppContext } from 'src/Contexts/app.Contexts'
+import Button from 'src/Component/Buttons'
 export default function Login() {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -26,9 +31,8 @@ export default function Login() {
   const onSubmit = handleSubmit((data) => {
     loginAccountMutation.mutate(data, {
       onSuccess: (data) => {
-        console.log(data)
-        console.log(data.data.message)
-        toast.success(`${data.data.message}`, { autoClose: 3000 })
+        setIsAuthenticated(true)
+        toast.success(`${data.data.message}`, { autoClose: 1300 })
       },
       onError: (error) => {
         if (isAxiosErrorUnprocessableEntity<ResponseApi<LoginSchema>>(error)) {
@@ -69,11 +73,15 @@ export default function Login() {
                 name='password'
                 register={register}
               />
-              <div className='mt-2'>
-                <button className='flex  w-full items-center justify-center bg-orange py-4 px-2 text-sm uppercase text-white hover:bg-red-600'>
-                  đăng nhập
-                </button>
-              </div>
+
+              <Button
+                type='submit'
+                className='flex  w-full items-center justify-center bg-red-500 py-4 px-2 text-sm uppercase text-white hover:bg-red-400'
+                isLoading={loginAccountMutation.isLoading}
+                disabled={loginAccountMutation.isLoading}
+              >
+                Đăng nhập
+              </Button>
 
               <div className='text-center mt-2'>
                 Bằng việc đăng ký bạn đã đồng ý với Shope về

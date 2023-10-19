@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Schema, schema } from 'src/Component/Ruler/Ruler'
 import Inputs from 'src/Component/Input'
@@ -13,8 +13,13 @@ import { isAxiosErrorUnprocessableEntity } from 'src/Component/Ruler/utils'
 import { ResponseApi } from 'src/types/utils.type'
 import { type } from 'os'
 import { toast } from 'react-toastify'
+import { useContext } from 'react'
+import { AppContext } from 'src/Contexts/app.Contexts'
+import Button from 'src/Component/Buttons'
 
 export default function Register() {
+  const { setIsAuthenticated } = useContext(AppContext)
+
   const {
     register,
     handleSubmit,
@@ -31,9 +36,8 @@ export default function Register() {
     const body = omit(data, ['password_Confing'])
     registerAccontMutation.mutate(body, {
       onSuccess: (data) => {
-        console.log(data)
-        console.log(data.data.message)
-        toast.success(`${data.data.message}`, { autoClose: 3000 })
+        setIsAuthenticated(true)
+        toast.success(`${data.data.message}`, { autoClose: 1300 })
       },
       onError: (error) => {
         if (isAxiosErrorUnprocessableEntity<ResponseApi<LoginSchema>>(error)) {
@@ -83,12 +87,14 @@ export default function Register() {
                 register={register}
               />
               <div className='mt-2'>
-                <button
-                  className='flex  w-full items-center justify-center bg-orange py-4 px-2 text-sm uppercase text-white hover:bg-red-600'
+                <Button
                   type='submit'
+                  className='flex  w-full items-center justify-center bg-red-500 py-4 px-2 text-sm uppercase text-white hover:bg-red-400'
+                  isLoading={registerAccontMutation.isLoading}
+                  disabled={registerAccontMutation.isLoading}
                 >
-                  đăng ký
-                </button>
+                  Đăng ký
+                </Button>
               </div>
               <div className='text-center mt-2'>
                 Bằng việc đăng ký bạn đã đồng ý với Shope về
@@ -123,4 +129,7 @@ export default function Register() {
       </div>
     </div>
   )
+}
+function setIsAuthenticated(arg0: boolean) {
+  throw new Error('Function not implemented.')
 }

@@ -1,8 +1,10 @@
+import { Helmet } from 'react-helmet-async'
 import { Link, useMatch } from 'react-router-dom'
 
 export default function Navbar() {
   const registerMacth = useMatch('/register')
   const isRegister = Boolean(registerMacth)
+
   return (
     <header className='py-5 bg-slate-100'>
       <div className='max-w-7xl mx-auto px-4'>

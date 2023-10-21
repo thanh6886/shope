@@ -13,7 +13,7 @@ import { useContext } from 'react'
 import { AppContext } from 'src/Contexts/app.Contexts'
 import Button from 'src/Component/Buttons'
 export default function Login() {
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   const {
     register,
@@ -32,6 +32,7 @@ export default function Login() {
     loginAccountMutation.mutate(data, {
       onSuccess: (data) => {
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         toast.success(`${data.data.message}`, { autoClose: 1300 })
       },
       onError: (error) => {

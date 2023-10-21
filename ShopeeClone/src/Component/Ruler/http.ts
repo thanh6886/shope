@@ -1,7 +1,16 @@
 import axios, { AxiosError, type AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import { HttpStatusCode } from 'src/const/HttpStatusCode'
-import { AuthResponse_http, clearAccesTokentoLS, getAccesTokentoLS, saveAccesTokentoLS } from 'src/types/auth.type'
+import {
+  AuthResponse_http,
+  AuthResponse,
+  clearAccesTokentoLS,
+  getAccesTokentoLS,
+  saveAccesTokentoLS,
+  getUserls,
+  saveUser
+} from 'src/types/auth.type'
+import { date } from 'yup'
 class Http {
   instance: AxiosInstance
   private access_Token: string
@@ -31,8 +40,10 @@ class Http {
       (response) => {
         const { url } = response.config
         if (url === '/login' || url === '/register') {
-          this.access_Token = (response.data as AuthResponse_http).data.access_token
+          const _data = response.data as AuthResponse_http
+          this.access_Token = _data.data.access_token
           saveAccesTokentoLS(this.access_Token)
+          saveUser(_data.data.user)
         } else if (url === '/logout') {
           this.access_Token = ''
           clearAccesTokentoLS()

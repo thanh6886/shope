@@ -10,7 +10,7 @@ import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { AxiosError } from 'axios'
 import { isAxiosErrorUnprocessableEntity } from 'src/Component/Ruler/utils'
-import { ResponseApi } from 'src/types/utils.type'
+import { ResponseApi, ErrorResponse } from 'src/types/utils.type'
 import { type } from 'os'
 import { toast } from 'react-toastify'
 import { useContext } from 'react'
@@ -18,7 +18,7 @@ import { AppContext } from 'src/Contexts/app.Contexts'
 import Button from 'src/Component/Buttons'
 
 export default function Register() {
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
 
   const {
     register,
@@ -37,10 +37,11 @@ export default function Register() {
     registerAccontMutation.mutate(body, {
       onSuccess: (data) => {
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         toast.success(`${data.data.message}`, { autoClose: 1300 })
       },
       onError: (error) => {
-        if (isAxiosErrorUnprocessableEntity<ResponseApi<LoginSchema>>(error)) {
+        if (isAxiosErrorUnprocessableEntity<ErrorResponse<LoginSchema>>(error)) {
           const formError = error.response?.data.data
           console.log(typeof formError)
           for (const key in formError) {
@@ -129,7 +130,4 @@ export default function Register() {
       </div>
     </div>
   )
-}
-function setIsAuthenticated(arg0: boolean) {
-  throw new Error('Function not implemented.')
 }

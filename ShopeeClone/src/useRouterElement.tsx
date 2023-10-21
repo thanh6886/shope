@@ -31,7 +31,7 @@ export default function useRouterElement() {
     },
     {
       path: '',
-      element: <ProtectedRoute />,
+      element: <ProtectedRoute />, // router cha
       children: [
         {
           path: 'profile',

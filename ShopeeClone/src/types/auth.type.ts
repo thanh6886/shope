@@ -28,14 +28,13 @@ export const getAccesTokentoLS = () => {
   return localStorage.getItem('access_token') || ''
 }
 
-export const clear = clearAccesTokentoLS()
-
 // lưu và sửa profile trong ls
 
 export const getUserls = () => {
   const result = localStorage.getItem('profile')
   return result ? JSON.parse(result) : null
 }
+
 export const saveUser = (profile: User) => {
   localStorage.setItem('profile', JSON.stringify(profile))
 }

@@ -6,14 +6,15 @@ import { logoutAccount } from 'src/apis/auth.api'
 import { useContext } from 'react'
 import { AppContext } from 'src/Contexts/app.Contexts'
 import { toast } from 'react-toastify'
+import { profile } from 'console'
 
 export default function NavHeader() {
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
   const logoutAccountMutation = useMutation({
     mutationFn: logoutAccount,
     onSuccess: () => {
-      setProfile(null)
       setIsAuthenticated(false)
+      setProfile(null)
       toast.success('đăng xuất thành công', { autoClose: 1300 })
     }
   })

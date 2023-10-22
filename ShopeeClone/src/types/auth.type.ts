@@ -10,6 +10,7 @@ export type AuthResponse = ResponseApi<{
 }>
 
 export type AuthResponse_http = ErrorResponse<{
+  // lấy thành công
   access_token: string
   refresh_token: string
   expires: string

@@ -14,7 +14,7 @@ import { AppContext } from 'src/Contexts/app.Contexts'
 import Button from 'src/Component/Buttons'
 export default function Login() {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
-  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,

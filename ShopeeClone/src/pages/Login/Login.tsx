@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { LoginSchema, login } from 'src/Component/Ruler/Ruler'
 import Inputs from 'src/Component/Input'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { loginAccount } from 'src/apis/auth.api'
+import authApi from 'src/apis/auth.api'
 import { useMutation } from '@tanstack/react-query'
 import { any } from 'prop-types'
 import { ResponseApi } from 'src/types/utils.type'
@@ -25,7 +25,7 @@ export default function Login() {
   })
 
   const loginAccountMutation = useMutation({
-    mutationFn: (body: LoginSchema) => loginAccount(body)
+    mutationFn: (body: LoginSchema) => authApi.loginAccount(body)
   })
 
   const onSubmit = handleSubmit((data) => {

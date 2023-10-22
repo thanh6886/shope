@@ -9,7 +9,7 @@ export default function SortAsilde() {
           </button>
           <button className='bg-white text-black text-center h-8 px-4 capitalizes hover:bg-slate-100'>Mới nhất</button>
           <button className='bg-white text-black text-center h-8 px-4 capitalizes hover:bg-slate-100'>Bán chạy</button>
-          <select className='h-8 px-4 bg-white text-black  hover:bg-slate-100 text-left outline-none'>
+          <select className='h-8 px-4 bg-white text-black  hover:bg-slate-100 text-left outline-none' defaultValue=''>
             <option value='' disabled>
               Giá
             </option>

@@ -4,7 +4,7 @@ interface Props {
 
 export default function ProductRating({ rating }: Props) {
   const handleRating = (_index: number) => {
-    if (_index < rating) {
+    if (_index <= rating) {
       return '100%'
     }
     if (_index > rating && _index - rating < 1) {

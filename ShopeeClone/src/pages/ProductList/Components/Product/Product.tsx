@@ -33,7 +33,7 @@ export default function Product({ product }: Props) {
 
           <div className='mt-3 flex items-center justify-end'>
             <ProductRating rating={product.rating} />
-            <div className='ml-2 text-sm'>
+            <div className='ml-2 text-sm '>
               <span>
                 {new Intl.NumberFormat('en', {
                   notation: 'compact',

@@ -4,7 +4,7 @@ import Product from './Components/Product'
 import { useQuery } from '@tanstack/react-query'
 import useQueryParams from 'src/hooks/useQueryParams'
 import ProductApi from 'src/apis/product.api'
-import Pagination from './Pagination'
+import Pagination from './Components/Pagination'
 import { useState } from 'react'
 import { ProductListConfig, QueryConfig } from 'src/types/product.type'
 import { isUndefined, omitBy } from 'lodash'
@@ -14,7 +14,7 @@ export default function ProductList() {
   const queryConfig: QueryConfig = omitBy(
     {
       page: queryParams.page || '1',
-      limit: queryParams.limit,
+      limit: queryParams.limit || '6',
       sort_by: queryParams.sort_by,
       name: queryParams.name,
       order: queryParams.order,
@@ -31,29 +31,31 @@ export default function ProductList() {
     queryKey: ['products', queryConfig], // khi queryParams thay đổi thì useQuery sẽ nhận dc như useEffect
     queryFn: () => {
       return ProductApi.getProducts(queryConfig as ProductListConfig)
-    }
+    },
+    keepPreviousData: true
   })
-  console.log(data)
+  console.log(queryConfig)
   return (
     <div className='bg-gray-200  py-6'>
       <div className='container'>
-        <div className='grid grid-cols-12 gap-6'>
-          <div className='col-span-3'>
-            <SildeFilter />
-          </div>
-          <div className='col-span-9'>
-            <SortAsilde />
-            <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-              {data &&
-                data.data.data.products.map((product) => (
+        {data && (
+          <div className='grid grid-cols-12 gap-6'>
+            <div className='col-span-3'>
+              <SildeFilter />
+            </div>
+            <div className='col-span-9'>
+              <SortAsilde qureyConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />
+              <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+                {data.data.data.products.map((product) => (
                   <div className='col-span-1' key={product._id}>
                     <Product product={product} />
                   </div>
                 ))}
+              </div>
+              <Pagination qureyConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />
             </div>
-            <Pagination page={1} setPage={() => {}} pageSize={20} />
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

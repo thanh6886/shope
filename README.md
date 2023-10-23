@@ -13,15 +13,15 @@ TH1:
 1 2 3 [4] 5 6 ... 19 20
 1 2 3 4 [5] 6 7 ... 19
 
-        if (page <= 5 && pageIndex > page + 2 && pageIndex < pageSize - 2 - 1) {
-          if (!dot) {
-            dot = true
-            return <button className='bg-white rounded px-3 py-2 shadow-sm  mx-2 cursor-pointer'>...</button>
-          }
-          return
-        }
+if (page <= 5 && pageIndex > page + 2 && pageIndex < pageSize - 2 - 1) {
+if (!dot) {
+dot = true
+return <button className='bg-white rounded px-3 py-2 shadow-sm  mx-2 cursor-pointer'>...</button>
+}
+return
+}
 
-1 2 ... 4 5 [6] 8 9 ... 19 20
+1 2 ... 4 5 [6] 7 8 ... 19 20
 
 1 2 ...13 14 [15] 16 17 ... 19 20
 

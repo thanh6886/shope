@@ -1,3 +1,5 @@
+import { type } from 'os'
+
 export interface Product {
   _id: string
   images: string[]
@@ -38,4 +40,8 @@ export interface ProductListConfig {
   price_min?: number | string
   name?: string
   category?: string
+}
+
+export type QueryConfig = {
+  [key in keyof ProductListConfig]: string
 }

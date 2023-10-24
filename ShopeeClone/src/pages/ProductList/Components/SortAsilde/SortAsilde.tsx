@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function SortAsilde({ qureyConfig, pageSize }: Props) {
-  const { sort_by = sortBy.createdAt, order } = qureyConfig
+  const { sort_by = sortBy.view, order } = qureyConfig
   const page = Number(qureyConfig.page)
   const navigate = useNavigate()
   const isActiveSort = (sortValue: Exclude<ProductListConfig['sort_by'], undefined>) => {

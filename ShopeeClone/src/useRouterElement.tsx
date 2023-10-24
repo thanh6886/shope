@@ -8,6 +8,8 @@ import MainLayout from './Layouts/MainLayout'
 import Profile from './pages/Profile'
 import { useContext } from 'react'
 import { AppContext } from './Contexts/app.Contexts'
+import ProductItem from './pages/ProductItem'
+import path from './const/path'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -21,20 +23,33 @@ function RejectedRoute() {
 export default function useRouterElement() {
   const RouteElements = useRoutes([
     {
-      path: '/',
-      index: true,
-      element: (
-        <MainLayout>
-          <ProductList />
-        </MainLayout>
-      )
+      path: '',
+      element: <RejectedRoute />,
+      children: [
+        {
+          path: path.login,
+          element: (
+            <RegisterLayout>
+              <Login />
+            </RegisterLayout>
+          )
+        },
+        {
+          path: path.register,
+          element: (
+            <RegisterLayout>
+              <Register />
+            </RegisterLayout>
+          )
+        }
+      ]
     },
     {
       path: '',
       element: <ProtectedRoute />, // router cha
       children: [
         {
-          path: 'profile',
+          path: path.profile,
           element: (
             <MainLayout>
               <Profile />
@@ -44,26 +59,22 @@ export default function useRouterElement() {
       ]
     },
     {
-      path: '',
-      element: <RejectedRoute />,
-      children: [
-        {
-          path: '/login',
-          element: (
-            <RegisterLayout>
-              <Login />
-            </RegisterLayout>
-          )
-        },
-        {
-          path: '/register',
-          element: (
-            <RegisterLayout>
-              <Register />
-            </RegisterLayout>
-          )
-        }
-      ]
+      path: path.productDetail,
+      index: true,
+      element: (
+        <MainLayout>
+          <ProductItem />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.home,
+      index: true,
+      element: (
+        <MainLayout>
+          <ProductList />
+        </MainLayout>
+      )
     }
   ])
   return RouteElements

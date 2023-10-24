@@ -16,6 +16,7 @@ import { toast } from 'react-toastify'
 import { useContext } from 'react'
 import { AppContext } from 'src/Contexts/app.Contexts'
 import Button from 'src/Component/Buttons'
+import path from 'src/const/path'
 
 export default function Register() {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
@@ -120,7 +121,7 @@ export default function Register() {
               </div>
               <div className='mt-8 flex items-center justify-center'>
                 <span className='text-gray-400'>Bạn đã có tài khoản?</span>
-                <Link className='ml-1 text-orange' to='/login'>
+                <Link className='ml-1 text-orange' to={path.login}>
                   Đăng nhập
                 </Link>
               </div>

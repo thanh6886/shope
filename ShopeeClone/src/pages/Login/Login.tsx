@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 import { useContext } from 'react'
 import { AppContext } from 'src/Contexts/app.Contexts'
 import Button from 'src/Component/Buttons'
+import path from 'src/const/path'
 export default function Login() {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
 
@@ -108,7 +109,7 @@ export default function Login() {
 
               <div className='mt-8 flex items-center justify-center'>
                 <span className='text-gray-400'>Bạn chưa có tài khoản?</span>
-                <Link className='ml-1 text-orange' to='/register'>
+                <Link className='ml-1 text-orange' to={path.register}>
                   Đăng ký
                 </Link>
               </div>

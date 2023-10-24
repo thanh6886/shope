@@ -34,7 +34,6 @@ export default function ProductList() {
     },
     keepPreviousData: true
   })
-  console.log(queryConfig)
   return (
     <div className='bg-gray-200  py-6'>
       <div className='container'>

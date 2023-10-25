@@ -6,6 +6,8 @@ import { useQuery } from '@tanstack/react-query'
 import ProductApi from 'src/apis/product.api'
 import ProductRating from '../ProductList/Components/ProductRating'
 import { rateSale } from 'src/Component/Ruler/utils'
+import Inputs from 'src/Component/Input'
+import DOMPurify from 'dompurify'
 
 export default function ProductItem() {
   const { id } = useParams()
@@ -107,7 +109,103 @@ export default function ProductItem() {
                   {rateSale(product.price_before_discount, product.price)}giảm
                 </div>
               </div>
+              <div className=' mt-8 flex items-center'>
+                <div className='capitalize text-gray-500'>Số lượng</div>
+                <div className='ml-10 flex items-center '>
+                  <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={1.5}
+                      stroke='currentColor'
+                      className='w-4 h-4'
+                    >
+                      <path strokeLinecap='round' strokeLinejoin='round' d='M18 12H6' />
+                    </svg>
+                  </button>
+                  <Inputs
+                    value={1}
+                    className=''
+                    classNameError='hidden'
+                    classNameInput='h-8 w-14 border-t border-b border-gray-300 p-1 text-center outline-none'
+                  />
+                  <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={1.5}
+                      stroke='currentColor'
+                      className='w-4 h-4'
+                    >
+                      <path strokeLinecap='round' strokeLinejoin='round' d='M12 6v12m6-6H6' />
+                    </svg>
+                  </button>
+                </div>
+                <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
+              </div>
+              <div className='mt-8 flex items-center'>
+                <button className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-gray-100'>
+                  <svg
+                    enable-background='new 0 0 15 15'
+                    viewBox='0 0 15 15'
+                    x='0'
+                    y='0'
+                    className='mr-[10px] h-5 w-5 fill-current stroke-orange text-orange'
+                  >
+                    <g>
+                      <g>
+                        <polyline
+                          fill='none'
+                          points='.5 .5 2.7 .5 5.2 11 12.4 11 14.5 3.5 3.7 3.5'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeMiterlimit='10'
+                        ></polyline>
+                        <circle cx='6' cy='13.5' r='1' stroke='none'></circle>
+                        <circle cx='11.5' cy='13.5' r='1' stroke='none'></circle>
+                      </g>
+                      <line
+                        fill='none'
+                        stroke-linecap='round'
+                        stroke-miterlimit='10'
+                        x1='7.5'
+                        x2='10.5'
+                        y1='7'
+                        y2='7'
+                      ></line>
+                      <line
+                        fill='none'
+                        stroke-linecap='round'
+                        stroke-miterlimit='10'
+                        x1='9'
+                        x2='9'
+                        y1='8.5'
+                        y2='5.5'
+                      ></line>
+                    </g>
+                  </svg>
+                  thêm vào giỏ hàng
+                </button>
+
+                <button className='flex h-12 min-w-[7rem] ml-6 items-center justify-center bg-orange text-white hover:bg-orange/75 rounded-sm capitalize shadow-sm outline-none'>
+                  Mua Ngay
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div className='mt-8 bg-white p-4 shadow'>
+        <div className='container'>
+          <div className='rounded bg-slate-50 p-4 text-lg capitalize text-gray-600'>MÔ TẢ SẢN PHẨM</div>
+          <div className='mx-4 mt-12 mb-4 text-sm leading-loose'>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(product.description)
+              }}
+            />
           </div>
         </div>
       </div>

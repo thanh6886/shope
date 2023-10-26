@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import Product from '../ProductList/Components/Product'
 import { useParams } from 'react-router-dom'
@@ -10,6 +10,7 @@ import Inputs from 'src/Component/Input'
 import DOMPurify from 'dompurify'
 
 export default function ProductItem() {
+  const [iteam, setIteam] = useState(0)
   const { id } = useParams()
   const { data: productDetailData } = useQuery({
     // productDetailData không phải định nghĩ kiểu dũ liệu mà là gán truy vấn
@@ -21,8 +22,8 @@ export default function ProductItem() {
   console.log(product)
   return (
     <div className='bg-gray-200 py-6'>
-      <div className='bg-white p-4 shadow'>
-        <div className='container'>
+      <div className=''>
+        <div className='container bg-white p-4 shadow'>
           <div className='grid grid-cols-12 gap-9'>
             <div className='col-span-5'>
               <div className='relative w-full pt-[100%] shadow'>
@@ -49,10 +50,10 @@ export default function ProductItem() {
                 {product.images.slice(0, 5).map((img, index) => {
                   const isActive = index === 0
                   return (
-                    <div className='relative w-full pt-[100%]'>
+                    <div className='relative w-full pt-[100%]' key={index}>
                       <img
-                        src={product.image}
-                        alt={product.name}
+                        src={img}
+                        alt={img}
                         className='absolute top-0 left-0 cursor-pointer bg-white w-full h-full object-cover'
                       />
                       {isActive && <div className='absolute inset-0 border-2 border-orange'></div>}
@@ -109,9 +110,10 @@ export default function ProductItem() {
                   {rateSale(product.price_before_discount, product.price)}giảm
                 </div>
               </div>
+
               <div className=' mt-8 flex items-center'>
                 <div className='capitalize text-gray-500'>Số lượng</div>
-                <div className='ml-10 flex items-center '>
+                <div className='ml-9 flex items-center '>
                   <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
@@ -125,6 +127,7 @@ export default function ProductItem() {
                     </svg>
                   </button>
                   <Inputs
+                    placeholder={`${iteam}`}
                     value={1}
                     className=''
                     classNameError='hidden'
@@ -143,12 +146,13 @@ export default function ProductItem() {
                     </svg>
                   </button>
                 </div>
+
                 <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
               </div>
               <div className='mt-8 flex items-center'>
                 <button className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-gray-100'>
                   <svg
-                    enable-background='new 0 0 15 15'
+                    enableBackground='new 0 0 15 15'
                     viewBox='0 0 15 15'
                     x='0'
                     y='0'
@@ -168,8 +172,8 @@ export default function ProductItem() {
                       </g>
                       <line
                         fill='none'
-                        stroke-linecap='round'
-                        stroke-miterlimit='10'
+                        strokeLinecap='round'
+                        strokeMiterlimit='10'
                         x1='7.5'
                         x2='10.5'
                         y1='7'
@@ -177,8 +181,8 @@ export default function ProductItem() {
                       ></line>
                       <line
                         fill='none'
-                        stroke-linecap='round'
-                        stroke-miterlimit='10'
+                        strokeLinecap='round'
+                        strokeMiterlimit='10'
                         x1='9'
                         x2='9'
                         y1='8.5'
@@ -197,8 +201,9 @@ export default function ProductItem() {
           </div>
         </div>
       </div>
-      <div className='mt-8 bg-white p-4 shadow'>
-        <div className='container'>
+
+      <div className='container'>
+        <div className='mt-8 bg-white p-4 shadow'>
           <div className='rounded bg-slate-50 p-4 text-lg capitalize text-gray-600'>MÔ TẢ SẢN PHẨM</div>
           <div className='mx-4 mt-12 mb-4 text-sm leading-loose'>
             <div

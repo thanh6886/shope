@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import Product from '../ProductList/Components/Product'
 import { useParams } from 'react-router-dom'
@@ -10,7 +10,6 @@ import Inputs from 'src/Component/Input'
 import DOMPurify from 'dompurify'
 
 export default function ProductItem() {
-  const [iteam, setIteam] = useState(0)
   const { id } = useParams()
   const { data: productDetailData } = useQuery({
     // productDetailData không phải định nghĩ kiểu dũ liệu mà là gán truy vấn
@@ -18,6 +17,20 @@ export default function ProductItem() {
     queryFn: () => ProductApi.getProductDetail(id as string)
   })
   const product = productDetailData?.data.data
+
+  const [currentIndexImg, setCurrentIndexImg] = useState([0, 5])
+  const [actionImg, setActionImg] = useState('')
+  const currentImg = useMemo(() => (product ? product.images.slice(...currentIndexImg) : []), [product])
+
+  useEffect(() => {
+    if (product && product.images.length > 0) {
+      setActionImg(product.images[0])
+    }
+  }, [product])
+
+  const chosseAction = (e: string) => {
+    setActionImg(e)
+  }
   if (!product) return null
   console.log(product)
   return (
@@ -28,7 +41,7 @@ export default function ProductItem() {
             <div className='col-span-5'>
               <div className='relative w-full pt-[100%] shadow'>
                 <img
-                  src={product.image}
+                  src={actionImg}
                   alt={product.name}
                   className='absolute top-0 left-0 bg-white w-full h-full object-cover'
                 />
@@ -47,13 +60,13 @@ export default function ProductItem() {
                   </svg>
                 </button>
 
-                {product.images.slice(0, 5).map((img, index) => {
-                  const isActive = index === 0
+                {currentImg.map((_img, index) => {
+                  const isActive = _img === actionImg
                   return (
-                    <div className='relative w-full pt-[100%]' key={index}>
+                    <div className='relative w-full pt-[100%]' key={index} onMouseEnter={() => chosseAction(_img)}>
                       <img
-                        src={img}
-                        alt={img}
+                        src={_img}
+                        alt={product.name}
                         className='absolute top-0 left-0 cursor-pointer bg-white w-full h-full object-cover'
                       />
                       {isActive && <div className='absolute inset-0 border-2 border-orange'></div>}
@@ -127,7 +140,6 @@ export default function ProductItem() {
                     </svg>
                   </button>
                   <Inputs
-                    placeholder={`${iteam}`}
                     value={1}
                     className=''
                     classNameError='hidden'

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { useFloating } from '@floating-ui/react'
 import NavHeader from '../NavHeader'
 import Popover from '../Porpver'
@@ -8,8 +8,16 @@ import { AppContext } from 'src/Contexts/app.Contexts'
 import { toast } from 'react-toastify'
 import Inputs from '../Input'
 import path from 'src/const/path'
-
+import useQueryConfig from 'src/Contexts/useQueryConfig'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { type } from 'os'
+import { Schema, schema } from '../Ruler/Ruler'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { omit } from 'lodash'
+import useSeachProduct from 'src/hooks/useSeachProduct'
 export default function Header() {
+  const { handleSearch, register } = useSeachProduct()
+
   return (
     <div className='pb-5 pt-2 bg-[linear-gradient(-180deg,#f53d2d,#f63)] text-white'>
       <div className='container'>
@@ -22,13 +30,13 @@ export default function Header() {
               </g>
             </svg>
           </Link>
-          <form className='col-span-9 '>
+          <form className='col-span-9 ' onSubmit={handleSearch}>
             <div className='bg-white rounded-sm p-1 flex'>
               <input
                 type='text'
-                name='search'
                 className='text-black px-3 py-2 flex-grow border-none outline-none bg-transparent'
                 placeholder='Tìm kiếm sản phẩm tên shop hoặc thương hiệu'
+                {...register('name')}
               />
               <button className='rounded-sm py-2 px-6 flex-shrink-0 bg-orange hover:opacity-90'>
                 <svg // search

@@ -2,30 +2,13 @@ import SildeFilter from './Components/SildeFilter'
 import SortAsilde from './Components/SortAsilde'
 import Product from './Components/Product'
 import { useQuery } from '@tanstack/react-query'
-import useQueryParams from 'src/hooks/useQueryParams'
 import ProductApi from 'src/apis/product.api'
 import Pagination from './Components/Pagination'
-import { useState } from 'react'
 import { ProductListConfig, QueryConfig } from 'src/types/product.type'
-import { isUndefined, omitBy } from 'lodash'
+import useQueryConfig from 'src/Contexts/useQueryConfig'
 
 export default function ProductList() {
-  const queryParams: QueryConfig = useQueryParams()
-  const queryConfig: QueryConfig = omitBy(
-    {
-      page: queryParams.page || '1',
-      limit: queryParams.limit || '5',
-      sort_by: queryParams.sort_by,
-      name: queryParams.name,
-      order: queryParams.order,
-      price_max: queryParams.price_max,
-      price_min: queryParams.price_min,
-      rating_filter: queryParams.rating_filter,
-      category: queryParams.category,
-      exclude: queryParams.exclude
-    },
-    isUndefined
-  )
+  const queryConfig = useQueryConfig()
 
   const { data } = useQuery({
     queryKey: ['products', queryConfig], // khi queryParams thay đổi thì useQuery sẽ nhận dc như useEffect

@@ -62,7 +62,9 @@ export const schema = yup.object({
     .required('nhập lại password là bắt bộc')
     .min(6, 'độ dài từ 6-12 ký tự ')
     .max(12, 'độ dài từ 6-12 ký tự')
-    .oneOf([yup.ref('password')], 'password không khớp') //ref tham chiếu đến value của password oneOf cho giá trị === value(password)
+    .oneOf([yup.ref('password')], 'password không khớp'), //ref tham chiếu đến value của password oneOf cho giá trị === value(password)
+
+  name: yup.string().trim().required('tên sản phẩm là bắt buộc')
 })
 
 export const login = schema.omit(['password_Confing'])

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Schema, schema } from 'src/Component/Ruler/Ruler'
+import { RegisterSchema, _register } from 'src/Component/Ruler/Ruler'
 import Inputs from 'src/Component/Input'
 
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -26,8 +26,8 @@ export default function Register() {
     handleSubmit,
     setError,
     formState: { errors }
-  } = useForm<Schema>({
-    resolver: yupResolver(schema)
+  } = useForm<RegisterSchema>({
+    resolver: yupResolver(_register)
   })
   const registerAccontMutation = useMutation({
     mutationFn: (body: LoginSchema) => authApi.registerAccount(body)

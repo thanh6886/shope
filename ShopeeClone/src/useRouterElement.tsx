@@ -23,6 +23,24 @@ function RejectedRoute() {
 export default function useRouterElement() {
   const RouteElements = useRoutes([
     {
+      path: path.productDetail,
+      index: true,
+      element: (
+        <MainLayout>
+          <ProductItem />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.home,
+      index: true,
+      element: (
+        <MainLayout>
+          <ProductList />
+        </MainLayout>
+      )
+    },
+    {
       path: '',
       element: <RejectedRoute />,
       children: [
@@ -57,24 +75,6 @@ export default function useRouterElement() {
           )
         }
       ]
-    },
-    {
-      path: path.productDetail,
-      index: true,
-      element: (
-        <MainLayout>
-          <ProductItem />
-        </MainLayout>
-      )
-    },
-    {
-      path: path.home,
-      index: true,
-      element: (
-        <MainLayout>
-          <ProductList />
-        </MainLayout>
-      )
     }
   ])
   return RouteElements

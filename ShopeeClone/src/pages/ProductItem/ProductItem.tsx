@@ -8,6 +8,8 @@ import ProductRating from '../ProductList/Components/ProductRating'
 import { rateSale } from 'src/Component/Ruler/utils'
 import Inputs from 'src/Component/Input'
 import DOMPurify from 'dompurify'
+import { ProductListConfig } from 'src/types/product.type'
+import { date } from 'yup'
 
 export default function ProductItem() {
   const { id } = useParams()
@@ -16,8 +18,19 @@ export default function ProductItem() {
     queryKey: ['product', id],
     queryFn: () => ProductApi.getProductDetail(id as string)
   })
-  const product = productDetailData?.data.data
+  // console.log(productDetailData)
 
+  const product = productDetailData?.data.data
+  const queryConfig: ProductListConfig = { limit: '15', page: '1', category: product?.category._id }
+  const { data: productsData } = useQuery({
+    queryKey: ['product', queryConfig],
+    queryFn: () => {
+      return ProductApi.getProducts(queryConfig)
+    },
+    enabled: Boolean(product),
+    staleTime: 3 * 60 * 1000
+  })
+  // console.log(productsData)
   const [currentIndexImg, setCurrentIndexImg] = useState([0, 5])
   const [actionImg, setActionImg] = useState('')
   const imageRef = useRef<HTMLImageElement>(null)
@@ -25,17 +38,16 @@ export default function ProductItem() {
     () => (product ? product.images.slice(...currentIndexImg) : []),
     [product, currentIndexImg]
   )
-  if (!product) return null
+
   useEffect(() => {
     if (product && product.images.length > 0) {
       setActionImg(product.images[0])
     }
   }, [product])
-
+  if (!product) return null
   const chosseAction = (e: string) => {
     setActionImg(e)
   }
-  console.log(product)
 
   const next = () => {
     if (currentIndexImg[1] < product.images.length) {
@@ -66,6 +78,7 @@ export default function ProductItem() {
   const handleRemoveZoom = () => {
     imageRef.current?.removeAttribute('style')
   }
+
   return (
     <div className='bg-gray-200 py-6'>
       <div className='container'>
@@ -268,6 +281,20 @@ export default function ProductItem() {
               }}
             />
           </div>
+        </div>
+      </div>
+      <div className='mt-8 '>
+        <div className='container '>
+          <span className='text-gray-600 uppercase text-lg'>CÓ THỂ BẠN CŨNG THÍCH </span>
+          {productsData && (
+            <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
+              {productsData.data.data.products.map((product) => (
+                <div className='col-span-1' key={product._id}>
+                  <Product product={product} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

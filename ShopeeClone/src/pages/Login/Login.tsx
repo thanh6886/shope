@@ -13,6 +13,7 @@ import { useContext } from 'react'
 import { AppContext } from 'src/Contexts/app.Contexts'
 import Button from 'src/Component/Buttons'
 import path from 'src/const/path'
+
 export default function Login() {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
 
@@ -39,7 +40,7 @@ export default function Login() {
       onError: (error) => {
         if (isAxiosErrorUnprocessableEntity<ResponseApi<LoginSchema>>(error)) {
           const loginForm = error.response?.data.data
-          console.log(loginForm)
+
           for (const key in loginForm) {
             setError(key as keyof LoginSchema, {
               message: loginForm[key as keyof LoginSchema],

@@ -11,7 +11,6 @@ import path from 'src/const/path'
 import useQueryConfig from 'src/Contexts/useQueryConfig'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { type } from 'os'
-import { Schema, schema } from '../Ruler/Ruler'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { omit } from 'lodash'
 import useSeachProduct from 'src/hooks/useSeachProduct'
@@ -30,8 +29,8 @@ export default function Header() {
               </g>
             </svg>
           </Link>
-          <form className='col-span-9 ' onSubmit={handleSearch}>
-            <div className='bg-white rounded-sm p-1 flex'>
+          <form className='col-span-9 '>
+            <div className='bg-white rounded-sm p-1 flex' onSubmit={handleSearch}>
               <input
                 type='text'
                 className='text-black px-3 py-2 flex-grow border-none outline-none bg-transparent'

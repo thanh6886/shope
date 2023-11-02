@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import Product from '../ProductList/Components/Product'
 import { useParams } from 'react-router-dom'
@@ -12,6 +12,10 @@ import { ProductListConfig } from 'src/types/product.type'
 import { date } from 'yup'
 
 export default function ProductItem() {
+  const [item, setItem] = useState<number>(0)
+  const hanldClink = () => {
+    setItem(item + 1)
+  }
   const { id } = useParams()
   const { data: productDetailData } = useQuery({
     // productDetailData không phải định nghĩ kiểu dũ liệu mà là gán truy vấn
@@ -184,7 +188,10 @@ export default function ProductItem() {
               <div className=' mt-8 flex items-center'>
                 <div className='capitalize text-gray-500'>Số lượng</div>
                 <div className='ml-9 flex items-center '>
-                  <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
+                  <button
+                    className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'
+                    onClick={() => setItem(item + 1)}
+                  >
                     <svg
                       xmlns='http://www.w3.org/2000/svg'
                       fill='none'
@@ -201,6 +208,7 @@ export default function ProductItem() {
                     className=''
                     classNameError='hidden'
                     classNameInput='h-8 w-14 border-t border-b border-gray-300 p-1 text-center outline-none'
+                    placeholder={`${item}`}
                   />
                   <button className='flex h-8 w-8 items-center justify-center rounded-l-sm border border-gray-300 text-gray-600'>
                     <svg

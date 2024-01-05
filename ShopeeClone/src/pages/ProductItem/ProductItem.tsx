@@ -31,6 +31,15 @@ export default function ProductItem() {
     enabled: Boolean(product),
     staleTime: 3 * 60 * 1000
   })
+
+  // usestate controlquantity
+
+  const [buyCount, setBuyCount] = useState(1)
+
+  const handleBuyCount = (value: number) => {
+    setBuyCount(value)
+  }
+
   // console.log(productsData)
   const [currentIndexImg, setCurrentIndexImg] = useState([0, 5])
   const [actionImg, setActionImg] = useState('')
@@ -182,7 +191,14 @@ export default function ProductItem() {
                 </div>
               </div>
 
-              <ControlQuantity />
+              <ControlQuantity
+                onDecrease={handleBuyCount}
+                onIncrease={handleBuyCount}
+                onType={handleBuyCount}
+                value={buyCount}
+                max={product.quantity}
+              />
+
               <div className='mt-8 flex items-center'>
                 <button className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-gray-100'>
                   <svg

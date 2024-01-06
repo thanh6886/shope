@@ -25,7 +25,9 @@ export default function ControlQuantity({
   const [localValue, setLocalValue] = useState<Number>(Number(value || 0))
 
   const handleChange = (element: React.ChangeEvent<HTMLInputElement>) => {
+    // const {value} = element.target
     let _value = Number(element.target.value)
+
     if (max !== undefined && _value > max) {
       _value = max
     } else if (_value < 1) {

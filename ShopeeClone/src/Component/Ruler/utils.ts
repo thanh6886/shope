@@ -11,3 +11,7 @@ export function isAxiosErrorUnprocessableEntity<T>(error: unknown): error is Axi
 export const rateSale = (before: number, affter: number) => {
   return Math.round(((before - affter) / before) * 100) + '%'
 }
+
+export function formatCurrency(currency: number) {
+  return new Intl.NumberFormat('de-DE').format(currency)
+}

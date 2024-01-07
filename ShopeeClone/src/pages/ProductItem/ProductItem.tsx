@@ -13,6 +13,7 @@ import { date } from 'yup'
 import ControlQuantity from 'src/Component/ControlQuantity'
 import purchaseApi from 'src/apis/purchase.api'
 import { toast } from 'react-toastify'
+import { purchasesStatus } from 'src/const/purchase'
 
 export default function ProductItem() {
   const { id } = useParams()
@@ -93,6 +94,7 @@ export default function ProductItem() {
   }
 
   // add to cart
+  const queryClient = useQueryClient()
   const AddToCartMutation = useMutation({
     mutationFn: (body: { product_id: string; buy_count: number }) => purchaseApi.addToCart(body)
   })
@@ -102,12 +104,13 @@ export default function ProductItem() {
       {
         buy_count: buyCount,
         product_id: product?._id as string
+      },
+      {
+        onSuccess: (data) => {
+          toast.success(data.data.message, { autoClose: 1000 })
+          queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
+        }
       }
-      // {
-      //   onSuccess: (data) => {
-      //     toast.success(data.data.message, { autoClose: 1000 })
-      //   }
-      // }
     )
   }
 

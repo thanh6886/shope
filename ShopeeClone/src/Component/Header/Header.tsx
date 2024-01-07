@@ -2,7 +2,7 @@ import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import { useFloating } from '@floating-ui/react'
 import NavHeader from '../NavHeader'
 import Popover from '../Porpver'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { AppContext } from 'src/Contexts/app.Contexts'
 import { toast } from 'react-toastify'
@@ -14,8 +14,24 @@ import { type } from 'os'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { omit } from 'lodash'
 import useSeachProduct from 'src/hooks/useSeachProduct'
+import { purchasesStatus } from 'src/const/purchase'
+import purchaseApi from 'src/apis/purchase.api'
+import { formatCurrency } from '../Ruler/utils'
 export default function Header() {
+  const MAX_PURCHASES = 5
+  // khi đăng nhập mới vào xem dc rỏ hàng
+  const { isAuthenticated } = useContext(AppContext)
+
   const { handleSearch, register } = useSeachProduct()
+
+  // này là gán truy vấn
+  const { data: purchasesInCartData } = useQuery({
+    queryKey: ['purchases', { status: purchasesStatus.inCart }],
+    queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart }),
+    enabled: isAuthenticated
+  })
+  // console.log(purchasesInCartData?.data.data)
+  const purchasesInCart = purchasesInCartData?.data.data
 
   return (
     <div className='pb-5 pt-2 bg-[linear-gradient(-180deg,#f53d2d,#f63)] text-white'>
@@ -58,21 +74,46 @@ export default function Header() {
             <Popover // dỏ hàng
               renderPopover={
                 <div className='relative  max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
-                  <div className='p-2'>
-                    <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
-                    <div className='mt-5'></div>
-                    <div className='mt-6 flex items-center justify-between'>
-                      <div className='text-xs capitalize text-gray-500'>Thêm hàng vào giỏ</div>
-                      <Link to='' className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-90'>
-                        Xem giỏ hàng
-                      </Link>
+                  {purchasesInCart && purchasesInCart.length > 0 ? (
+                    <div className='p-2'>
+                      <div className='capitalize text-gray-400'>Sản phẩm mới thêm</div>
+                      <div className='mt-5'>
+                        {purchasesInCart.slice(0, MAX_PURCHASES).map((purchase) => (
+                          <div className='mt-2 flex py-2 hover:bg-gray-100' key={purchase._id}>
+                            <div className='flex-shrink-0'>
+                              <img
+                                src={purchase.product.image}
+                                alt={purchase.product.name}
+                                className='h-11 w-11 object-cover'
+                              />
+                            </div>
+                            <div className='ml-2 flex-grow overflow-hidden'>
+                              <div className='truncate'>{purchase.product.name}</div>
+                            </div>
+                            <div className='ml-2 flex-shrink-0'>
+                              <span className='text-orange'>
+                                ₫{new Intl.NumberFormat().format(purchase.product.price)}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className='mt-6 flex items-center justify-between'>
+                        <div className='text-xs capitalize text-gray-500'>Thêm hàng vào giỏ</div>
+                        <Link
+                          to=''
+                          className='rounded-sm bg-orange px-4 py-2 capitalize text-white hover:bg-opacity-90'
+                        >
+                          Xem giỏ hàng
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-
-                  <div className='flex h-[300px] w-[300px] flex-col items-center justify-center p-2'>
-                    <img src='' alt='no purchase' className='h-24 w-24' />
-                    <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
-                  </div>
+                  ) : (
+                    <div className='flex h-[300px] w-[300px] flex-col items-center justify-center p-2'>
+                      <img src='' alt='no purchase' className='h-24 w-24' />
+                      <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
+                    </div>
+                  )}
                 </div>
               }
             >

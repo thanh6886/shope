@@ -7,13 +7,13 @@ export type PurchaseListStatus = PurchaseStatus | 0
 export interface Purchase {
   _id: string
   buy_count: number
-  status: PurchaseStatus
   price: number
   price_before_discount: number
-  createdAt: string
-  updatedAt: string
+  status: PurchaseStatus
   user: string
   product: Product
+  createdAt: string
+  updatedAt: string
 }
 
 export interface ExtendedPurchase extends Purchase {

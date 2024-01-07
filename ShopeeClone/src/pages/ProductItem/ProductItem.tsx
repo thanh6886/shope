@@ -2,15 +2,17 @@ import React, { MouseEventHandler, useEffect, useMemo, useRef, useState } from '
 import { Helmet } from 'react-helmet-async'
 import Product from '../ProductList/Components/Product'
 import { useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import ProductApi from 'src/apis/product.api'
 import ProductRating from '../ProductList/Components/ProductRating'
 import { rateSale } from 'src/Component/Ruler/utils'
 import Inputs from 'src/Component/Input'
 import DOMPurify from 'dompurify'
-import { ProductListConfig } from 'src/types/product.type'
+import { Product as ProductType, ProductListConfig } from 'src/types/product.type'
 import { date } from 'yup'
 import ControlQuantity from 'src/Component/ControlQuantity'
+import purchaseApi from 'src/apis/purchase.api'
+import { toast } from 'react-toastify'
 
 export default function ProductItem() {
   const { id } = useParams()
@@ -39,6 +41,7 @@ export default function ProductItem() {
   const handleBuyCount = (value: number) => {
     setBuyCount(value)
   }
+  // console.log(buyCount)
 
   // console.log(productsData)
   const [currentIndexImg, setCurrentIndexImg] = useState([0, 5])
@@ -54,13 +57,13 @@ export default function ProductItem() {
       setActionImg(product.images[0])
     }
   }, [product])
-  if (!product) return null
+
   const chosseAction = (e: string) => {
     setActionImg(e)
   }
 
   const next = () => {
-    if (currentIndexImg[1] < product.images.length) {
+    if (currentIndexImg[1] < (product as ProductType).images.length) {
       setCurrentIndexImg((e) => [e[0] + 1, e[1] + 1])
     }
   }
@@ -89,6 +92,26 @@ export default function ProductItem() {
     imageRef.current?.removeAttribute('style')
   }
 
+  // add to cart
+  const AddToCartMutation = useMutation({
+    mutationFn: (body: { product_id: string; buy_count: number }) => purchaseApi.addToCart(body)
+  })
+
+  const AddToCart = () => {
+    AddToCartMutation.mutate(
+      {
+        buy_count: buyCount,
+        product_id: product?._id as string
+      }
+      // {
+      //   onSuccess: (data) => {
+      //     toast.success(data.data.message, { autoClose: 1000 })
+      //   }
+      // }
+    )
+  }
+
+  if (!product) return null
   return (
     <div className='bg-gray-200 py-6'>
       <div className='container'>
@@ -200,7 +223,10 @@ export default function ProductItem() {
               />
 
               <div className='mt-8 flex items-center'>
-                <button className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-gray-100'>
+                <button
+                  className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-gray-100'
+                  onClick={AddToCart}
+                >
                   <svg
                     enableBackground='new 0 0 15 15'
                     viewBox='0 0 15 15'

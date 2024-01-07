@@ -1,12 +1,12 @@
 import http from 'src/Component/Ruler/http'
 import { Purchase, PurchaseListStatus } from 'src/types/purchase.type'
-import { ErrorResponse } from 'src/types/utils.type'
+import { ErrorResponse, SuccessResponse } from 'src/types/utils.type'
 
 const URL = 'purchases'
 
 const purchaseApi = {
-  addToCart(body: { product_id: string; buy_conunt: number }) {
-    return http.post<ErrorResponse<Purchase>>(`${URL}/add-to-cart`, body)
+  addToCart(body: { product_id: string; buy_count: number }) {
+    return http.post<SuccessResponse<Purchase>>(`${URL}/add-to-cart`, body)
   },
 
   getPurchases(params: { status: PurchaseListStatus }) {

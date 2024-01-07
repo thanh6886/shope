@@ -22,7 +22,7 @@ export default function ControlQuantity({
   value,
   ...rest
 }: Props) {
-  const [localValue, setLocalValue] = useState<Number>(Number(value || 0))
+  const [localValue, setLocalValue] = useState<number>(Number(value || 0))
 
   const handleChange = (element: React.ChangeEvent<HTMLInputElement>) => {
     // const {value} = element.target
@@ -34,6 +34,7 @@ export default function ControlQuantity({
       _value = 1
     }
     onType && onType(_value)
+    setLocalValue(_value)
   }
 
   const Increase = () => {
@@ -52,7 +53,9 @@ export default function ControlQuantity({
     onDecrease && onDecrease(_value)
     setLocalValue(_value)
   }
-
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement, Element>) => {
+    onFocusOut && onFocusOut(Number(event.target.value))
+  }
   return (
     <div className='mt-8 flex items-center'>
       <div className='capitalize text-gray-500'>Số lượng</div>
@@ -73,8 +76,9 @@ export default function ControlQuantity({
           </svg>
         </button>
         <InputNumber
-          value={value}
+          value={value || localValue}
           onChange={handleChange}
+          onBlur={handleBlur}
           className=''
           classNameError='hidden'
           classNameInput='h-8 w-14 border-t border-b border-gray-300 p-1 text-center outline-none'

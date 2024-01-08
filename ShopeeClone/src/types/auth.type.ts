@@ -1,5 +1,5 @@
 import { type } from 'os'
-import { ErrorResponse, ResponseApi } from './utils.type'
+import { ResponseApi, SuccessResponse } from './utils.type'
 import { User } from './user.type'
 
 export type AuthResponse = ResponseApi<{
@@ -9,7 +9,7 @@ export type AuthResponse = ResponseApi<{
   user: User
 }>
 
-export type AuthResponse_http = ErrorResponse<{
+export type AuthResponse_http = SuccessResponse<{
   // lấy thành công
   access_token: string
   refresh_token: string

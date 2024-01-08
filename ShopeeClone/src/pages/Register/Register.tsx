@@ -10,7 +10,7 @@ import authApi from 'src/apis/auth.api'
 import { omit } from 'lodash'
 import { AxiosError } from 'axios'
 import { isAxiosErrorUnprocessableEntity } from 'src/Component/Ruler/utils'
-import { ResponseApi, ErrorResponse } from 'src/types/utils.type'
+import { ResponseApi, SuccessResponse } from 'src/types/utils.type'
 import { type } from 'os'
 import { toast } from 'react-toastify'
 import { useContext } from 'react'
@@ -42,7 +42,7 @@ export default function Register() {
         toast.success(`${data.data.message}`, { autoClose: 1300 })
       },
       onError: (error) => {
-        if (isAxiosErrorUnprocessableEntity<ErrorResponse<LoginSchema>>(error)) {
+        if (isAxiosErrorUnprocessableEntity<SuccessResponse<LoginSchema>>(error)) {
           const formError = error.response?.data.data
           console.log(typeof formError)
           for (const key in formError) {

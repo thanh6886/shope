@@ -10,13 +10,11 @@ import Inputs from '../Input'
 import path from 'src/const/path'
 import useQueryConfig from 'src/Contexts/useQueryConfig'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { type } from 'os'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { omit } from 'lodash'
+
 import useSeachProduct from 'src/hooks/useSeachProduct'
 import { purchasesStatus } from 'src/const/purchase'
 import purchaseApi from 'src/apis/purchase.api'
-import { formatCurrency } from '../Ruler/utils'
+
 export default function Header() {
   const MAX_PURCHASES = 5
   // khi đăng nhập mới vào xem dc rỏ hàng
@@ -110,7 +108,11 @@ export default function Header() {
                     </div>
                   ) : (
                     <div className='flex h-[300px] w-[300px] flex-col items-center justify-center p-2'>
-                      <img src='' alt='no purchase' className='h-24 w-24' />
+                      <img
+                        src='https://png.pngtree.com/png-vector/20220802/ourmid/pngtree-prohibited-supermarket-cart-icon-on-red-circle-decoration-supermarket-background-vector-png-image_33047444.jpg'
+                        alt='no purchase'
+                        className='h-30 w-28'
+                      />
                       <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
                     </div>
                   )}
@@ -132,10 +134,11 @@ export default function Header() {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
-
-                {/* <span // trên rỏ hàng
-                  className='absolute top-[-5px] left-[17px] rounded-full bg-white px-[9px] py-[1px] text-xs text-orange '
-                ></span> */}
+                {purchasesInCart && purchasesInCart.length > 0 && (
+                  <span className='absolute top-[-5px] left-[17px] rounded-full bg-white px-[9px] py-[1px] text-xs text-orange '>
+                    {purchasesInCart?.length}
+                  </span>
+                )}
               </Link>
             </Popover>
           </div>

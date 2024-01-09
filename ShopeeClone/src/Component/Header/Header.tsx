@@ -119,7 +119,7 @@ export default function Header() {
                 </div>
               }
             >
-              <Link to='/Cart' className='relative'>
+              <Link to={path.cart} className='relative'>
                 <svg // dỏ hàng
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'

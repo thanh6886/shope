@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import Popover from '../Porpver'
 import { useTranslation } from 'react-i18next'
@@ -7,14 +7,19 @@ import { useContext } from 'react'
 import { AppContext } from 'src/Contexts/app.Contexts'
 import { toast } from 'react-toastify'
 import { profile } from 'console'
+import { purchasesStatus } from 'src/const/purchase'
 
 export default function NavHeader() {
+  const queryClient = useQueryClient()
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
   const logoutAccountMutation = useMutation({
     mutationFn: authApi.logoutAccount,
     onSuccess: () => {
       setIsAuthenticated(false)
       setProfile(null)
+      queryClient.removeQueries({
+        queryKey: ['purchases', { status: purchasesStatus.inCart }]
+      })
       toast.success('đăng xuất thành công', { autoClose: 1300 })
     }
   })

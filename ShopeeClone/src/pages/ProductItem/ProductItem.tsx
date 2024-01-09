@@ -216,15 +216,18 @@ export default function ProductItem() {
                   {rateSale(product.price_before_discount, product.price)}giảm
                 </div>
               </div>
+              <div className='mt-8 flex items-center'>
+                <div className='capitalize text-gray-500'>Số lượng</div>
+                <ControlQuantity
+                  onDecrease={handleBuyCount}
+                  onIncrease={handleBuyCount}
+                  onType={handleBuyCount}
+                  value={buyCount}
+                  max={product.quantity}
+                />
 
-              <ControlQuantity
-                onDecrease={handleBuyCount}
-                onIncrease={handleBuyCount}
-                onType={handleBuyCount}
-                value={buyCount}
-                max={product.quantity}
-              />
-
+                <div className='ml-6 text-sm text-gray-500'> sản phẩm có sẵn</div>
+              </div>
               <div className='mt-8 flex items-center'>
                 <button
                   className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-gray-100'

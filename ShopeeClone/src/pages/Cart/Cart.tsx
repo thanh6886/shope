@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Button from 'src/Component/Buttons'
@@ -9,31 +9,53 @@ import path from 'src/const/path'
 import { purchasesStatus } from 'src/const/purchase'
 import { Purchase } from 'src/types/purchase.type'
 import { produce } from 'immer'
+import { keyBy } from 'lodash'
 interface ExtendedPurchases extends Purchase {
   disabled: boolean
   checked: boolean
 }
 
 export default function Cart() {
-  const { data: purchasesInCartData } = useQuery({
+  const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart })
   })
   // console.log(purchasesInCartData?.data.data)
   const purchasesInCart = purchasesInCartData?.data.data
 
+  // updatePurchase
+  const updatePurchaseMutation = useMutation({
+    mutationFn: (body: { product_id: string; buy_count: number }) => purchaseApi.updatePurchase(body),
+    onSuccess: () => {
+      refetch()
+    }
+  })
+  // deletePurchase
+  const deletePurchaseMutation = useMutation({
+    mutationFn: (purchaseIds: string[]) => purchaseApi.deletePurchase(purchaseIds),
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
   // checkall
 
   const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchases[]>([])
   const isAllcheck = useMemo(() => extendedPurchases.every((e) => e.checked), [extendedPurchases])
   useEffect(() => {
-    setExtendedPurchases(
-      purchasesInCart?.map((purchase) => ({
-        ...purchase,
-        disabled: false,
-        checked: false
-      })) || []
-    )
+    setExtendedPurchases((prev) => {
+      const extendedPurchasesObject = keyBy(prev, '_id')
+
+      return (
+        purchasesInCart?.map((purchase) => {
+          return {
+            ...purchase,
+            disabled: false,
+            checked: Boolean(extendedPurchasesObject[purchase._id]?.checked)
+          }
+        }) || []
+      )
+    })
   }, [purchasesInCart])
   // console.log(extendedPurchases)
 
@@ -45,13 +67,42 @@ export default function Cart() {
     )
   }
   const handleCheckAll = () => {
-    setExtendedPurchases((prev) =>
-      prev.map((element) => ({
+    setExtendedPurchases((prev) => {
+      // console.log(prev)
+      return prev.map((element) => ({
         ...element,
         checked: !isAllcheck
       }))
+    })
+  }
+  // input Quantity Control
+  const handleTypeQuantity = (index: number) => (value: number) => {
+    setExtendedPurchases(
+      produce((draft) => {
+        draft[index].buy_count = value
+      })
     )
   }
+  const handleQuantity = (index: number, value: number) => {
+    const purchase = extendedPurchases[index]
+
+    setExtendedPurchases(
+      produce((draft) => {
+        draft[index].disabled = true
+      })
+    )
+
+    updatePurchaseMutation.mutate({
+      product_id: purchase.product._id,
+      buy_count: value
+    })
+  }
+  // delete
+  const handleDelete = (index: number) => {
+    const purchaseId = extendedPurchases[index]._id
+    deletePurchaseMutation.mutate([purchaseId])
+  }
+
   return (
     <div className='bg-neutral-100 py-16'>
       <div className='container'>
@@ -124,8 +175,10 @@ export default function Cart() {
                         <ControlQuantity
                           value={element.buy_count}
                           max={element.product.quantity}
-                          // onIncrease={}
-                          // onDecrease={}
+                          classNameWrapper='flex items-center'
+                          onIncrease={(value) => handleQuantity(index, value)}
+                          onDecrease={(value) => handleQuantity(index, value)}
+                          disabled={element.disabled}
                           // onType={}
                           // onFocus={}
                         />

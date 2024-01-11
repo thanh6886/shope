@@ -83,19 +83,20 @@ export default function Cart() {
       })
     )
   }
-  const handleQuantity = (index: number, value: number) => {
+  const handleQuantity = (index: number, value: number, check: boolean) => {
     const purchase = extendedPurchases[index]
+    if (check) {
+      setExtendedPurchases(
+        produce((draft) => {
+          draft[index].disabled = true
+        })
+      )
 
-    setExtendedPurchases(
-      produce((draft) => {
-        draft[index].disabled = true
+      updatePurchaseMutation.mutate({
+        product_id: purchase.product._id,
+        buy_count: value
       })
-    )
-
-    updatePurchaseMutation.mutate({
-      product_id: purchase.product._id,
-      buy_count: value
-    })
+    }
   }
   // delete
   const handleDelete = (index: number) => {
@@ -176,11 +177,19 @@ export default function Cart() {
                           value={element.buy_count}
                           max={element.product.quantity}
                           classNameWrapper='flex items-center'
-                          onIncrease={(value) => handleQuantity(index, value)}
-                          onDecrease={(value) => handleQuantity(index, value)}
+                          onIncrease={(value) => handleQuantity(index, value, value <= element.product.quantity)}
+                          onDecrease={(value) => handleQuantity(index, value, value >= 1)}
                           disabled={element.disabled}
-                          // onType={}
-                          // onFocus={}
+                          onType={handleTypeQuantity(index)}
+                          onFocusOut={(value) =>
+                            handleQuantity(
+                              index,
+                              value,
+                              value <= element.product.quantity &&
+                                value >= 1 &&
+                                value !== (purchasesInCart as Purchase[])[index].buy_count
+                            )
+                          }
                         />
                       </div>
                       <div className='col-span-1'>

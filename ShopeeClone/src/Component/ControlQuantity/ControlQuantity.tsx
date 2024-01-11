@@ -53,6 +53,8 @@ export default function ControlQuantity({
     onDecrease && onDecrease(_value)
     setLocalValue(_value)
   }
+
+  // cart
   const handleBlur = (event: React.FocusEvent<HTMLInputElement, Element>) => {
     onFocusOut && onFocusOut(Number(event.target.value))
   }

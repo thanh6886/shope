@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Button from 'src/Component/Buttons'
 import ControlQuantity from 'src/Component/ControlQuantity'
 import { generateNameId } from 'src/Component/Ruler/utils'
@@ -17,6 +17,8 @@ interface ExtendedPurchases extends Purchase {
 }
 
 export default function Cart() {
+  const location = useLocation()
+  const choosenPurchaseIdFromLocation = (location.state as { purchaseId: string } | null)?.purchaseId
   const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart })
@@ -77,15 +79,16 @@ export default function Cart() {
 
       return (
         purchasesInCart?.map((purchase) => {
+          const isChoosenPurchaseFromLocation = choosenPurchaseIdFromLocation === purchase._id
           return {
             ...purchase,
             disabled: false,
-            checked: Boolean(extendedPurchasesObject[purchase._id]?.checked)
+            checked: isChoosenPurchaseFromLocation || Boolean(extendedPurchasesObject[purchase._id]?.checked)
           }
         }) || []
       )
     })
-  }, [purchasesInCart])
+  }, [purchasesInCart, choosenPurchaseIdFromLocation])
   // console.log(extendedPurchases)
 
   const handleCheck = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {

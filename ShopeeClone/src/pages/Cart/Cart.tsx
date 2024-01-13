@@ -90,7 +90,12 @@ export default function Cart() {
     })
   }, [purchasesInCart, choosenPurchaseIdFromLocation])
   // console.log(extendedPurchases)
-
+  //
+  useEffect(() => {
+    return () => {
+      history.replaceState(null, '')
+    }
+  }, [])
   const handleCheck = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setExtendedPurchases(
       produce((draft) => {

@@ -1,7 +1,7 @@
 import React, { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import Product from '../ProductList/Components/Product'
-import { useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import ProductApi from 'src/apis/product.api'
 import ProductRating from '../ProductList/Components/ProductRating'
@@ -14,10 +14,12 @@ import ControlQuantity from 'src/Component/ControlQuantity'
 import purchaseApi from 'src/apis/purchase.api'
 import { toast } from 'react-toastify'
 import { purchasesStatus } from 'src/const/purchase'
+import path from 'src/const/path'
 
 export default function ProductItem() {
   const { id } = useParams()
-  const { data: productDetailData } = useQuery({
+  const navigate = useNavigate()
+  const { data: productDetailData, refetch } = useQuery({
     // productDetailData không phải định nghĩ kiểu dũ liệu mà là gán truy vấn
     queryKey: ['product', id],
     queryFn: () => ProductApi.getProductDetail(id as string)
@@ -96,7 +98,7 @@ export default function ProductItem() {
   // add to cart
   const queryClient = useQueryClient()
   const AddToCartMutation = useMutation({
-    mutationFn: (body: { product_id: string; buy_count: number }) => purchaseApi.addToCart(body)
+    mutationFn: purchaseApi.addToCart
   })
 
   const AddToCart = () => {
@@ -112,6 +114,16 @@ export default function ProductItem() {
         }
       }
     )
+  }
+  const buyNow = async () => {
+    const res = await AddToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product?._id as string })
+    const purchase = res.data.data
+    // console.log(purchase)
+    navigate(path.cart, {
+      state: {
+        purchaseId: purchase._id
+      }
+    })
   }
 
   if (!product) return null
@@ -225,7 +237,6 @@ export default function ProductItem() {
                   value={buyCount}
                   max={product.quantity}
                 />
-
                 <div className='ml-6 text-sm text-gray-500'> sản phẩm có sẵn</div>
               </div>
               <div className='mt-8 flex items-center'>
@@ -275,7 +286,10 @@ export default function ProductItem() {
                   thêm vào giỏ hàng
                 </button>
 
-                <button className='flex h-12 min-w-[7rem] ml-6 items-center justify-center bg-orange text-white hover:bg-orange/75 rounded-sm capitalize shadow-sm outline-none'>
+                <button
+                  className='flex h-12 min-w-[7rem] ml-6 items-center justify-center bg-orange text-white hover:bg-orange/75 rounded-sm capitalize shadow-sm outline-none'
+                  onClick={buyNow}
+                >
                   Mua Ngay
                 </button>
               </div>

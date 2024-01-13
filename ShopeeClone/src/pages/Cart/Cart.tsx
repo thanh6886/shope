@@ -152,7 +152,7 @@ export default function Cart() {
       buyPurchaseMutation.mutate(productALL)
     }
   }
-
+  // console.log(extendedPurchases)
   return (
     <div className='bg-neutral-100 py-16'>
       <div className='container'>

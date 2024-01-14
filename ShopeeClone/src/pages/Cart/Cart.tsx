@@ -12,10 +12,6 @@ import { produce } from 'immer'
 import { keyBy } from 'lodash'
 import { toast } from 'react-toastify'
 import { AppContext } from 'src/Contexts/app.Contexts'
-interface ExtendedPurchases extends Purchase {
-  disabled: boolean
-  checked: boolean
-}
 
 export default function Cart() {
   const location = useLocation()

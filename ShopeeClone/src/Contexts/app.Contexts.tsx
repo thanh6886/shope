@@ -1,11 +1,10 @@
 import React, { createContext, useState } from 'react'
 import { getAccesTokentoLS, getUserls, saveUser } from 'src/types/auth.type'
 import { User } from 'src/types/user.type'
-import { ExtendedPurchase } from 'src/types/purchase.type'
+import { ExtendedPurchase, Purchase } from 'src/types/purchase.type'
 interface Props {
   children: React.ReactNode
 }
-
 interface AppContextInterface {
   isAuthenticated: boolean
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>

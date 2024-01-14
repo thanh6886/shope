@@ -47,7 +47,7 @@ export default function Login() {
               type: 'Sever'
             })
           }
-          toast.error(`${loginForm?.password}`, { autoClose: 7000 })
+          toast.error(`${loginForm?.password}`, { autoClose: 7000, position: 'top-center' })
         }
       }
     })

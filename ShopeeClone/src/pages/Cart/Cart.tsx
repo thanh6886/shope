@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import Button from 'src/Component/Buttons'
 import ControlQuantity from 'src/Component/ControlQuantity'
@@ -11,6 +11,7 @@ import { Purchase } from 'src/types/purchase.type'
 import { produce } from 'immer'
 import { keyBy } from 'lodash'
 import { toast } from 'react-toastify'
+import { AppContext } from 'src/Contexts/app.Contexts'
 interface ExtendedPurchases extends Purchase {
   disabled: boolean
   checked: boolean
@@ -53,8 +54,7 @@ export default function Cart() {
   })
 
   // checkall
-
-  const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchases[]>([])
+  const { extendedPurchases, setExtendedPurchases } = useContext(AppContext)
   const isAllcheck = useMemo(() => extendedPurchases.every((e) => e.checked), [extendedPurchases])
   const checkPurchase = useMemo(() => extendedPurchases.filter((element) => element.checked), [extendedPurchases])
   // console.log(checkPurchase)

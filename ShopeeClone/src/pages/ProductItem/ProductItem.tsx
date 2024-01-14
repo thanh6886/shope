@@ -98,7 +98,7 @@ export default function ProductItem() {
   // add to cart
   const queryClient = useQueryClient()
   const AddToCartMutation = useMutation({
-    mutationFn: purchaseApi.addToCart
+    mutationFn: (body: { product_id: string; buy_count: number }) => purchaseApi.addToCart(body)
   })
 
   const AddToCart = () => {
@@ -111,19 +111,31 @@ export default function ProductItem() {
         onSuccess: (data) => {
           toast.success(data.data.message, { autoClose: 1000 })
           queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
+          refetch()
         }
       }
     )
   }
-  const buyNow = async () => {
-    const res = await AddToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product?._id as string })
-    const purchase = res.data.data
-    // console.log(purchase)
-    navigate(path.cart, {
-      state: {
-        purchaseId: purchase._id
+  const buyNow = () => {
+    AddToCartMutation.mutate(
+      {
+        buy_count: buyCount,
+        product_id: product?._id as string
+      },
+      {
+        onSuccess: (data) => {
+          toast.success(data.data.message, { autoClose: 1000 })
+          queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
+          const purchase = data.data.data
+          navigate(path.cart, {
+            state: {
+              purchaseId: purchase._id
+            }
+          })
+          refetch()
+        }
       }
-    })
+    )
   }
 
   if (!product) return null

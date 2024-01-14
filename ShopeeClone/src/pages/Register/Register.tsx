@@ -39,7 +39,7 @@ export default function Register() {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
-        toast.success(`${data.data.message}`, { autoClose: 1300 })
+        toast.success(`${data.data.message}`, { autoClose: 1300, position: 'top-center' })
       },
       onError: (error) => {
         if (isAxiosErrorUnprocessableEntity<SuccessResponse<LoginSchema>>(error)) {
@@ -51,7 +51,7 @@ export default function Register() {
               type: 'Sever'
             })
           }
-          toast.error(`${formError?.email}`, { autoClose: 7000 })
+          toast.error(`${formError?.email}`, { autoClose: 7000, position: 'top-center' })
         }
       }
     })

@@ -35,7 +35,7 @@ export default function Login() {
       onSuccess: (data) => {
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
-        toast.success(`${data.data.message}`, { autoClose: 1300 })
+        toast.success(`${data.data.message}`, { autoClose: 1300, position: 'top-center' })
       },
       onError: (error) => {
         if (isAxiosErrorUnprocessableEntity<ResponseApi<LoginSchema>>(error)) {

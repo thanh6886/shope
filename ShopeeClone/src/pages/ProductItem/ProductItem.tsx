@@ -109,7 +109,7 @@ export default function ProductItem() {
       },
       {
         onSuccess: (data) => {
-          toast.success(data.data.message, { autoClose: 1000 })
+          toast.success(data.data.message, { autoClose: 1000, position: 'top-center' })
           queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
           refetch()
         }

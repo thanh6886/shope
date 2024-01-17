@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Footer() {
   return (
-    <footer className='py-20  bg-slate-100'>
+    <footer className='py-20  bg-slate-300/80'>
       <div className='container'>
         <div className='flex justify-evenly '>
           <div className=''>

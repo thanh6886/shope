@@ -55,7 +55,10 @@ class Http {
         if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
           const data: any = error.response?.data
           const message = data.message || error.message
-          toast.error(`${message}`)
+          toast.error(`${message}`, { autoClose: 500 })
+        }
+        if (error.response?.status == HttpStatusCode.Unauthorized) {
+          clearAccesTokentoLS()
         }
         return Promise.reject(error)
       }

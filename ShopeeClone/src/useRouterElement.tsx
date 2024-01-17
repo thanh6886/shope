@@ -81,25 +81,23 @@ export default function useRouterElement() {
         },
         {
           path: path.user,
-          element: <MainLayout />,
+          element: (
+            <MainLayout>
+              <LayoutUser />
+            </MainLayout>
+          ),
           children: [
             {
-              path: '',
-              element: <LayoutUser />,
-              children: [
-                {
-                  path: path.profile,
-                  element: <Profile />
-                },
-                {
-                  path: path.historyPurchase,
-                  element: <History_user />
-                },
-                {
-                  path: path.changePassword,
-                  element: <ChangePassword />
-                }
-              ]
+              path: path.profile,
+              element: <Profile />
+            },
+            {
+              path: path.historyPurchase,
+              element: <History_user />
+            },
+            {
+              path: path.changePassword,
+              element: <ChangePassword />
             }
           ]
         }

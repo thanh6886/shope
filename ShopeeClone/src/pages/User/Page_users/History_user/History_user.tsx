@@ -1,5 +1,5 @@
 import React from 'react'
 
 export default function History_user() {
-  return <div>History</div>
+  return <div>Histonsjsjhry</div>
 }

@@ -53,7 +53,7 @@ class Http {
       },
       function (error: AxiosError) {
         if (error.response?.status !== HttpStatusCode.UnprocessableEntity) {
-          const data: any = error.response?.data
+          const data: any | undefined = error.response?.data
           const message = data.message || error.message
           toast.error(`${message}`, { autoClose: 500 })
         }

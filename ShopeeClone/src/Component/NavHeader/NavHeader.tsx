@@ -8,6 +8,7 @@ import { AppContext } from 'src/Contexts/app.Contexts'
 import { toast } from 'react-toastify'
 import { profile } from 'console'
 import { purchasesStatus } from 'src/const/purchase'
+import path from 'src/const/path'
 
 export default function NavHeader() {
   const queryClient = useQueryClient()
@@ -70,7 +71,10 @@ export default function NavHeader() {
           className='ml-6 flex cursor-pointer items-center py-1 hover:text-black'
           renderPopover={
             <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
-              <Link to='' className='block w-full bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'>
+              <Link
+                to={path.profile}
+                className='block w-full bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
+              >
                 Tài khoản của tôi
               </Link>
               <Link to='' className='block w-full bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'>

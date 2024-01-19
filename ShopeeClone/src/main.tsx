@@ -10,8 +10,7 @@ import { AppProvider } from './Contexts/app.Contexts'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity,
-      retry: 0
+      staleTime: Infinity
     }
   }
 })

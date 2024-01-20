@@ -86,4 +86,4 @@ export type LoginSchema = yup.InferType<typeof login>
 export type RegisterSchema = yup.InferType<typeof _register>
 export type Schema = yup.InferType<typeof schema>
 
-export type SchemaUser = yup.InferType<typeof schemaUser>
+export type Schema_User = yup.InferType<typeof schemaUser>

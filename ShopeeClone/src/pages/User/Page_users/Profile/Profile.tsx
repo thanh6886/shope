@@ -1,26 +1,26 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { profile } from 'console'
 import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import Button from 'src/Component/Buttons'
 import Inputs from 'src/Component/Input'
 import InputNumber from 'src/Component/InputNumber'
-import { SchemaUser, schemaUser, profileShema } from 'src/Component/Ruler/Ruler'
+import { Schema_User, schemaUser, profileShema } from 'src/Component/Ruler/Ruler'
 import useQueryConfig from 'src/Contexts/useQueryConfig'
-import UserApi from 'src/apis/user.api'
+import UserApi, { BodyUpdate } from 'src/apis/user.api'
+import DateSelect from '../../Components/DateSelect'
+import { omit } from 'lodash'
 
-type FormData = Pick<SchemaUser, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
+type FormData = Pick<Schema_User, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 
 export default function Profile() {
   const {
     register,
     control,
     formState: { errors },
-    handleSubmit,
     setValue,
-    setError,
-    watch
+    handleSubmit
   } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -29,32 +29,37 @@ export default function Profile() {
       avatar: '',
       date_of_birth: new Date(1990, 0, 1)
     },
-    resolver: yupResolver(profileShema)
+    resolver: yupResolver<FormData>(profileShema)
   })
-  const { data: ProfileData } = useQuery({
+  const { data: ProfileData, refetch } = useQuery({
     queryKey: ['proflie'],
     queryFn: UserApi.getProfile
   })
-  console.log(ProfileData)
+  const profile = ProfileData?.data.data
+
   useEffect(() => {
     if (ProfileData?.data.data) {
-      setValue('name', ProfileData.data.data.name),
-        setValue('address', ProfileData.data.data.address),
-        setValue('phone', ProfileData.data.data.phone),
-        setValue('avatar', ProfileData.data.data.avatar),
-        setValue(
-          'date_of_birth',
-          ProfileData.data.data.date_of_birth ? new Date(ProfileData.data.data.date_of_birth) : new Date(1990, 0, 1)
-        )
+      setValue('name', profile?.email)
+      setValue('address', profile?.address),
+        setValue('phone', profile?.phone),
+        setValue('avatar', profile?.avatar),
+        setValue('date_of_birth', profile?.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
     }
-  }, [ProfileData?.data.data, setValue])
+  }, [profile, setValue])
+  const uploadProfileMutation = useMutation({
+    mutationFn: (body: BodyUpdate) => UserApi.uploadProfile(body),
+    onSuccess: () => {
+      refetch()
+    }
+  })
+  const onSubmit = handleSubmit((data) => uploadProfileMutation.mutate(data))
   return (
     <div className='rounded-sm bg-white md:px-7 px-2 pb-20 shadow'>
       <div className='border-b border-b-gray-200 py-6'>
         <h1 className='text-lg font-medium  capitalize text-black'>Hồ Sơ Của Tôi</h1>
         <div className='mt-1 text-sm text-gray-700 '>Quản lý thông tin hồ so để bảo mật tài khoản</div>
       </div>
-      <form className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
+      <form className='mt-8 flex flex-col-reverse md:flex-row md:items-start' onSubmit={onSubmit}>
         <div className='mt-6 flex-grow pr-12 md:mt-0'>
           <div className='flex flex-wrap'>
             <div className='w-[20%] truncate pt-3 text-right capitalize'>Email</div>
@@ -104,22 +109,12 @@ export default function Profile() {
               />
             </div>
           </div>
-          <div className='mt-2 flex flex-wrap'>
-            <div className='w-[20%] truncate pt-3 text-right capitalize'>Ngày sinh</div>
-            <div className='w-[80%] pl-5 '>
-              <div className='flex justify-between'>
-                <select className='h-10 w-[32%] rounded-sm border border-black'>
-                  <option disabled>Ngày</option>
-                </select>
-                <select className='h-10 w-[32%] rounded-sm border border-black'>
-                  <option disabled>Tháng</option>
-                </select>
-                <select className='h-10 w-[32%] rounded-sm border border-black'>
-                  <option disabled>Năm</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <Controller
+            control={control}
+            name='date_of_birth'
+            render={({ field }) => <DateSelect onChange={field.onChange} value={field.value} />}
+          />
+
           <div className='mt-5 flex flex-col flex-wrap sm:flex-row'>
             <div className='w-[20%] truncate pt-3 text-right capitalize'></div>
             <div className='w-[80%] pl-5 flex justify-center'>

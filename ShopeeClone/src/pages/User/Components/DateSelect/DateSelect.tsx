@@ -1,5 +1,5 @@
 import { map, range } from 'lodash'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 interface Props {
   onChange?: (value: Date) => void
@@ -13,7 +13,15 @@ export default function DateSelect({ onChange, value, errorMessenger }: Props) {
     month: value?.getMonth() || 0,
     year: value?.getFullYear() || 1990
   })
-
+  useEffect(() => {
+    if (value) {
+      setDate({
+        day: value.getDate(),
+        month: value.getMonth(),
+        year: value.getFullYear()
+      })
+    }
+  }, [value])
   const hanldeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value, name } = event.target
     const newDate = {
@@ -49,7 +57,7 @@ export default function DateSelect({ onChange, value, errorMessenger }: Props) {
             value={value?.getMonth() || date.month}
           >
             <option disabled>Tháng</option>
-            {range(0, 11).map((index) => {
+            {range(0, 12).map((index) => {
               return (
                 <option key={index} value={index}>
                   {index + 1}

@@ -1,14 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { profile } from 'console'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import Button from 'src/Component/Buttons'
 import Inputs from 'src/Component/Input'
 import InputNumber from 'src/Component/InputNumber'
 import { Schema_User, profileShema, schemaUser } from 'src/Component/Ruler/Ruler'
 import useQueryConfig from 'src/Contexts/useQueryConfig'
-import UserApi from 'src/apis/user.api'
+import UserApi, { BodyUpdate } from 'src/apis/user.api'
 import DateSelect from '../../Components/DateSelect'
 import { omit } from 'lodash'
 import { toast } from 'react-toastify'
@@ -18,6 +18,7 @@ import { AppContext } from 'src/Contexts/app.Contexts'
 type FormData = Pick<Schema_User, 'name' | 'address' | 'phone' | 'avatar' | 'date_of_birth'>
 
 export default function Profile() {
+  const avatarRef = useRef<HTMLInputElement>(null)
   const { setProfile } = useContext(AppContext)
   const { data: ProfileData, refetch } = useQuery({
     queryKey: ['proflie'],
@@ -50,25 +51,28 @@ export default function Profile() {
     }
   }, [profile, setValue])
   const uploadProfileMutation = useMutation({
-    mutationFn: UserApi.uploadProfile
+    mutationFn: (body: BodyUpdate) => UserApi.uploadProfile(body)
   })
 
   const onSubmit = handleSubmit((data) => {
-    console.log('1', data)
-    const res = {
-      ...data,
-      date_of_birth: data.date_of_birth?.toISOString()
-    }
-
-    uploadProfileMutation.mutate(res, {
-      onSuccess: () => {
-        const dataForm = {
-          ...res
+    uploadProfileMutation.mutate(
+      {
+        ...data,
+        date_of_birth: data.date_of_birth?.toISOString()
+      },
+      {
+        onSuccess: (_data) => {
+          // console.log(_data)
+          toast('up thông tin thành công ', { autoClose: 500 })
+          saveUser(_data.data.data)
+          setProfile(_data.data.data)
         }
-        toast('up thông tin thành công ', { autoClose: 500 }), console.log(res)
       }
-    })
+    )
   })
+  const UpAvatar = () => {
+    avatarRef.current?.click()
+  }
 
   return (
     <div className='rounded-sm bg-white md:px-7 px-2 pb-20 shadow'>
@@ -153,8 +157,9 @@ export default function Profile() {
                 className='h-full w-full rounded-full object-cover'
               />
             </div>
-            <input type='file' accept='.jpg,.jpeg,.png' className='hidden' />
+            <input type='file' accept='.jpg,.jpeg,.png' className='hidden' ref={avatarRef} />
             <button
+              onClick={UpAvatar}
               className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-md'
               type='button'
             >

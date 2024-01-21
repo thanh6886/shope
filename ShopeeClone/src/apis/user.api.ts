@@ -2,7 +2,7 @@ import http from 'src/Component/Ruler/http'
 import { User } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
 
-export interface BodyUpdate extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email'> {
+interface BodyUpdate extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email'> {
   password?: string
   newPassword?: string
 }

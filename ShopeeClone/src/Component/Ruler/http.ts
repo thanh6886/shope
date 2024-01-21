@@ -3,15 +3,14 @@ import { toast } from 'react-toastify'
 import { HttpStatusCode } from 'src/const/HttpStatusCode'
 import path from 'src/const/path'
 import {
-  AuthResponse_http,
-  AuthResponse,
   clearAccesTokentoLS,
   getAccesTokentoLS,
   saveAccesTokentoLS,
   getUserls,
   saveUser
-} from 'src/types/auth.type'
+} from 'src/Component/Ruler/utils'
 import { date } from 'yup'
+import { AuthResponse_http } from 'src/types/auth.type'
 class Http {
   instance: AxiosInstance
   private access_Token: string

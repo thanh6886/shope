@@ -1,7 +1,8 @@
 import React, { createContext, useState } from 'react'
-import { getAccesTokentoLS, getUserls, saveUser } from 'src/types/auth.type'
+
 import { User } from 'src/types/user.type'
 import { ExtendedPurchase, Purchase } from 'src/types/purchase.type'
+import { getAccesTokentoLS, getUserls } from 'src/Component/Ruler/utils'
 interface Props {
   children: React.ReactNode
 }

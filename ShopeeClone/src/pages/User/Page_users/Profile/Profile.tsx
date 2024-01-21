@@ -1,20 +1,29 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { profile } from 'console'
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import Button from 'src/Component/Buttons'
 import Inputs from 'src/Component/Input'
 import InputNumber from 'src/Component/InputNumber'
-import { Schema_User, schemaUser, profileShema } from 'src/Component/Ruler/Ruler'
+import { Schema_User, profileShema, schemaUser } from 'src/Component/Ruler/Ruler'
 import useQueryConfig from 'src/Contexts/useQueryConfig'
-import UserApi, { BodyUpdate } from 'src/apis/user.api'
+import UserApi from 'src/apis/user.api'
 import DateSelect from '../../Components/DateSelect'
 import { omit } from 'lodash'
+import { toast } from 'react-toastify'
+import { saveUser } from 'src/Component/Ruler/utils'
+import { AppContext } from 'src/Contexts/app.Contexts'
 
-type FormData = Pick<Schema_User, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
+type FormData = Pick<Schema_User, 'name' | 'address' | 'phone' | 'avatar' | 'date_of_birth'>
 
 export default function Profile() {
+  const { setProfile } = useContext(AppContext)
+  const { data: ProfileData, refetch } = useQuery({
+    queryKey: ['proflie'],
+    queryFn: UserApi.getProfile
+  })
+  const profile = ProfileData?.data.data
   const {
     register,
     control,
@@ -31,28 +40,36 @@ export default function Profile() {
     },
     resolver: yupResolver<FormData>(profileShema)
   })
-  const { data: ProfileData, refetch } = useQuery({
-    queryKey: ['proflie'],
-    queryFn: UserApi.getProfile
-  })
-  const profile = ProfileData?.data.data
-
   useEffect(() => {
-    if (ProfileData?.data.data) {
-      setValue('name', profile?.email)
-      setValue('address', profile?.address),
-        setValue('phone', profile?.phone),
-        setValue('avatar', profile?.avatar),
-        setValue('date_of_birth', profile?.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
+    if (profile) {
+      setValue('name', profile.email)
+      setValue('address', profile.address),
+        setValue('phone', profile.phone),
+        setValue('avatar', profile.avatar),
+        setValue('date_of_birth', profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
     }
   }, [profile, setValue])
   const uploadProfileMutation = useMutation({
-    mutationFn: (body: BodyUpdate) => UserApi.uploadProfile(body),
-    onSuccess: () => {
-      refetch()
-    }
+    mutationFn: UserApi.uploadProfile
   })
-  const onSubmit = handleSubmit((data) => uploadProfileMutation.mutate(data))
+
+  const onSubmit = handleSubmit((data) => {
+    console.log('1', data)
+    const res = {
+      ...data,
+      date_of_birth: data.date_of_birth?.toISOString()
+    }
+
+    uploadProfileMutation.mutate(res, {
+      onSuccess: () => {
+        const dataForm = {
+          ...res
+        }
+        toast('up thông tin thành công ', { autoClose: 500 }), console.log(res)
+      }
+    })
+  })
+
   return (
     <div className='rounded-sm bg-white md:px-7 px-2 pb-20 shadow'>
       <div className='border-b border-b-gray-200 py-6'>

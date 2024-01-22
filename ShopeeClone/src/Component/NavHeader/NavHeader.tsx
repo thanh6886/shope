@@ -9,6 +9,8 @@ import { toast } from 'react-toastify'
 import { profile } from 'console'
 import { purchasesStatus } from 'src/const/purchase'
 import path from 'src/const/path'
+import { getUrlAvata } from '../Ruler/utils'
+import { getuid } from 'process'
 
 export default function NavHeader() {
   const queryClient = useQueryClient()
@@ -90,11 +92,7 @@ export default function NavHeader() {
           }
         >
           <div className='mr-2 h-8 w-8 flex-shrink-0'>
-            <img
-              src={profile?.avatar || 'https://i.pinimg.com/564x/16/e9/74/16e974f2d42cb7dcbd00c47f93fc3e1a.jpg'}
-              alt=''
-              className='w-full h-full rounded-full object-cover'
-            />
+            <img src={getUrlAvata(profile?.avatar)} alt='' className='w-full h-full rounded-full object-cover' />
           </div>
           <div>{profile?.name}</div>
         </Popover>

@@ -7,3 +7,5 @@ export const purchasesStatus = {
   delivered: 4,
   cancelled: 5
 } as const
+
+export const maxSizeUpLoad = 1048576

@@ -63,3 +63,8 @@ export const getUserls = () => {
 export const saveUser = (profile: User) => {
   localStorage.setItem('profile', JSON.stringify(profile))
 }
+export const getUrlAvata = (avatar?: string) => {
+  return avatar
+    ? `https://api-ecom.duthanhduoc.com/images/${avatar}`
+    : 'https://i.pinimg.com/564x/16/e9/74/16e974f2d42cb7dcbd00c47f93fc3e1a.jpg'
+}

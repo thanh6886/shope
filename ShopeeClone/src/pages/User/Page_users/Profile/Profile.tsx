@@ -200,7 +200,14 @@ export default function Profile() {
                 className='h-full w-full rounded-full object-cover'
               />
             </div>
-            <input type='file' accept='.jpg,.jpeg,.png' className='hidden' ref={avatarRef} onChange={onFileChane} />
+            <input
+              type='file'
+              accept='.jpg,.jpeg,.png'
+              className='hidden'
+              ref={avatarRef}
+              onChange={onFileChane}
+              onClick={(event) => ((event.target as any).value = null)}
+            />
             <button
               onClick={UpAvatar}
               className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-md'

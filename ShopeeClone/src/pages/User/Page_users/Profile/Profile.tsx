@@ -62,7 +62,7 @@ export default function Profile() {
         setValue('date_of_birth', profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
     }
   }, [profile, setValue])
-  console.log(profile)
+  // console.log(profile)
   const uploadProfileMutation = useMutation({
     mutationFn: (body: BodyUpdate) => UserApi.uploadProfile(body)
   })
@@ -114,9 +114,7 @@ export default function Profile() {
   const UpAvatar = () => {
     avatarRef.current?.click()
   }
-  // const handleChangeFile = (file?: File) => {
-  //   setFile(file)
-  // }
+
   return (
     <div className='rounded-sm bg-white md:px-7 px-2 pb-20 shadow'>
       <div className='border-b border-b-gray-200 py-6'>

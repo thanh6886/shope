@@ -92,11 +92,12 @@ export default function Profile() {
     } catch (error) {
       if (isAxiosErrorUnprocessableEntity<SuccessResponse<FormDataError>>(error)) {
         const formError = error.response?.data.data
-        console.log(typeof formError)
-        for (const key in formError) {
-          setError(key as keyof FormDataError, {
-            message: formError[key as keyof FormDataError],
-            type: 'Server'
+        if (formError) {
+          Object.keys(formError).forEach((key) => {
+            setError(key as keyof FormData, {
+              message: formError[key as keyof FormData],
+              type: 'Server'
+            })
           })
         }
       }
@@ -136,7 +137,7 @@ export default function Profile() {
                 classNameInput='px-3 py-3 w-full outline-none border border-gray-500 focus:border-gray-500 rounded-sm focus:shadow-sm'
                 register={register}
                 name='name'
-                placeholder='tên'
+                placeholder='Tên'
                 messenger={errors.name?.message}
               />
             </div>

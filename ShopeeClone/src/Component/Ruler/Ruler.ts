@@ -4,6 +4,16 @@ import * as yup from 'yup'
 import { type } from 'os'
 type Rules = { [key in 'email' | 'password' | 'password_Confing']?: RegisterOptions }
 
+const checkPassWord = (refString: string) => {
+  return yup
+    .string()
+    .required('nhập lại password là bắt bộc')
+    .min(6, 'độ dài từ 6-12 ký tự ')
+    .max(12, 'độ dài từ 6-12 ký tự')
+    .oneOf([yup.ref(refString)], 'nhập lại password không khớp')
+  //ref tham chiếu đến value của password oneOf cho giá trị === value(password))
+}
+
 export const getRules = (getValues: UseFormGetValues<any>): Rules => ({
   email: {
     required: {
@@ -57,12 +67,7 @@ export const getRules = (getValues: UseFormGetValues<any>): Rules => ({
 export const schema = yup.object({
   email: yup.string().required('Email là bắt buộc').email('Email không đúng định dạng'),
   password: yup.string().required('password là bắt bộc').min(6, 'độ dài từ 6-12 ký tự').max(12, 'độ dài từ 6-12 ký tự'),
-  password_Confing: yup
-    .string()
-    .required('nhập lại password là bắt bộc')
-    .min(6, 'độ dài từ 6-12 ký tự ')
-    .max(12, 'độ dài từ 6-12 ký tự')
-    .oneOf([yup.ref('password')], 'password không khớp'), //ref tham chiếu đến value của password oneOf cho giá trị === value(password)
+  password_Confing: checkPassWord('password'),
 
   name: yup.string().trim().required('tên sản phẩm là bắt buộc')
 })
@@ -73,14 +78,15 @@ export const schemaUser = yup.object({
   address: yup.string().max(160, 'độ dài tối đa 160 ký tự'),
   avatar: yup.string().max(1000),
   date_of_birth: yup.date().max(new Date(), 'chọn ngày tháng năm'),
-  password: schema.fields['password'],
-  new_password: schema.fields['password'],
-  password_Confing: schema.fields['password_Confing']
+  password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
+  new_password: schema.fields['password'] as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>,
+  password_Confing: checkPassWord('new_password') as yup.StringSchema<string | undefined, yup.AnyObject, undefined, ''>
 })
 
 export const login = schema.omit(['password_Confing', 'name'])
 export const _register = schema.omit(['name'])
 export const profileShema = schemaUser.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
+export const newPasswordSchema = schemaUser.pick(['password', 'new_password', 'password_Confing'])
 export type LoginSchema = yup.InferType<typeof login>
 
 export type RegisterSchema = yup.InferType<typeof _register>

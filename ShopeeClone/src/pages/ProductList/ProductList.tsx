@@ -6,6 +6,9 @@ import ProductApi from 'src/apis/product.api'
 import Pagination from './Components/Pagination'
 import { ProductListConfig, QueryConfig } from 'src/types/product.type'
 import useQueryConfig from 'src/Contexts/useQueryConfig'
+import CategoryAPI from 'src/apis/category.api'
+import { Helmet } from 'react-helmet-async'
+import { Category } from 'src/types/category.type'
 
 export default function ProductList() {
   const queryConfig = useQueryConfig()
@@ -18,13 +21,19 @@ export default function ProductList() {
     keepPreviousData: true,
     staleTime: 3 * 60 * 1000
   })
+  const { data: categoriesData } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => {
+      return CategoryAPI.getCategories()
+    }
+  })
   return (
     <div className='bg-gray-200  py-6'>
       <div className='container'>
         {data && (
           <div className='grid grid-cols-12 gap-6'>
             <div className='col-span-3'>
-              <SildeFilter />
+              <SildeFilter queryConfig={queryConfig} categories={categoriesData?.data.data || []} />
             </div>
             <div className='col-span-9'>
               <SortAsilde qureyConfig={queryConfig} pageSize={data.data.data.pagination.page_size} />

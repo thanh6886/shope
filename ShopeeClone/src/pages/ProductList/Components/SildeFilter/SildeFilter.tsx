@@ -1,12 +1,45 @@
-import path from 'path'
-import { Link } from 'react-router-dom'
+import { yupResolver } from '@hookform/resolvers/yup'
+import classNames from 'classnames'
+import { Controller, useForm } from 'react-hook-form'
+
+import { Link, NavLink, createSearchParams } from 'react-router-dom'
 import Button from 'src/Component/Buttons'
 import Inputs from 'src/Component/Input'
+import InputNumber from 'src/Component/InputNumber'
+import { Schema, priceSchema } from 'src/Component/Ruler/Ruler'
+import path from 'src/const/path'
+import { Category } from 'src/types/category.type'
+import { QueryConfig } from 'src/types/product.type'
+import { ObjectSchema } from 'yup'
 
-export default function SildeFilter() {
+interface Props {
+  queryConfig: QueryConfig
+  categories: Category[]
+}
+type FormData = Pick<Schema, 'price_max' | 'price_min'>
+
+export default function SildeFilter({ queryConfig, categories }: Props) {
+  const { category } = queryConfig
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm<FormData>({
+    defaultValues: {
+      price_min: '',
+      price_max: ''
+    },
+    resolver: yupResolver<FormData>(priceSchema as ObjectSchema<FormData>)
+  })
   return (
     <div className='py-4'>
-      <Link to='' className='flex items-center font-bold'>
+      <Link
+        to=''
+        className={classNames('flex items-center font-bold', {
+          'text-orange': !category
+        })}
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
@@ -25,19 +58,33 @@ export default function SildeFilter() {
       </Link>
       <div className='bg-gray-500 h-[1px] my-4' />
       <ul>
-        <li className='py-2 pl-2'>
-          <Link to='' className='relative  text-orange font-semibold'>
-            <svg viewBox='0 0 4 7' className='w-2 h-2 fill-orange absolute top-1 left-[-10px]'>
-              <polygon points='4 3.5 0 0 0 7'></polygon>
-            </svg>
-            Thời trang nam
-          </Link>
-        </li>
-        <li className='py-2 pl-2'>
-          <Link to='' className='mr-3'>
-            áo khoác
-          </Link>
-        </li>
+        {categories.map((element, index) => {
+          const isActive = category == element._id
+          return (
+            <li className='py-2 pl-2' key={index}>
+              <Link
+                to={{
+                  pathname: path.home,
+                  search: createSearchParams({
+                    ...queryConfig,
+                    category: element._id
+                  }).toString()
+                }}
+                className={classNames('relative px-2', {
+                  'text-orange font-semibold': isActive
+                })}
+              >
+                {isActive && (
+                  <svg viewBox='0 0 4 7' className='w-2 h-2 fill-orange absolute top-1 left-[-10px]'>
+                    <polygon points='4 3.5 0 0 0 7'></polygon>
+                  </svg>
+                )}
+
+                {element.name}
+              </Link>
+            </li>
+          )
+        })}
       </ul>
 
       <Link to='' className=' font-bold flex items-center uppercase mt-4'>
@@ -61,21 +108,41 @@ export default function SildeFilter() {
       <div className=' my-5'>
         <form className='mt-2'>
           <div className='flex items-start'>
-            <Inputs
-              type='text'
-              placeholder='₫ Từ'
-              className='grow'
-              classNameInput='p-1  text-sm w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+            <Controller
+              control={control}
+              name='price_min'
+              render={({ field }) => {
+                return (
+                  <InputNumber
+                    type='text'
+                    className='grow'
+                    placeholder='₫ TỪ'
+                    classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+                    classNameError='hidder'
+                    {...field}
+                  />
+                )
+              }}
             />
             <div className='mx-2 mt-1 shrink-0'>--</div>
-            <Inputs
-              type='text'
-              placeholder='₫ Đến'
-              className='grow'
-              classNameInput='p-1  text-sm w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+            <Controller
+              control={control}
+              name='price_min'
+              render={({ field }) => {
+                return (
+                  <InputNumber
+                    type='text'
+                    className='grow'
+                    placeholder='₫ Đến'
+                    classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+                    classNameError='hidder'
+                    {...field}
+                  />
+                )
+              }}
             />
           </div>
-          <Button className=' bg-orange uppercase w-full h-[32px] text-sm text-white hover:bg-red-600 flex justify-center items-center'>
+          <Button className=' bg-orange uppercase w-full h-[32px] text-sm text-white hover:bg-red-600 flex justify-center items-center mt-2'>
             ÁP DỤNG
           </Button>
         </form>

@@ -21,7 +21,7 @@ export default function Cart() {
   })
   // console.log(purchasesInCartData?.data.data)
   const purchasesInCart = purchasesInCartData?.data.data
-
+  console.log(purchasesInCart)
   // updatePurchase
   const updatePurchaseMutation = useMutation({
     mutationFn: (body: { product_id: string; buy_count: number }) => purchaseApi.updatePurchase(body),

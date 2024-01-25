@@ -16,6 +16,7 @@ import { getUrlAvata, isAxiosErrorUnprocessableEntity, saveUser } from 'src/Comp
 import { AppContext } from 'src/Contexts/app.Contexts'
 import { SuccessResponse } from 'src/types/utils.type'
 import { maxSizeUpLoad } from 'src/const/purchase'
+import { takeCoverage } from 'v8'
 
 type FormData = Pick<Schema_User, 'name' | 'address' | 'phone' | 'avatar' | 'date_of_birth'>
 type FormDataError = Omit<FormData, 'date_of_birth'> & {
@@ -31,6 +32,12 @@ export default function Profile() {
   const { data: ProfileData, refetch } = useQuery({
     queryKey: ['proflie'],
     queryFn: UserApi.getProfile
+  })
+  const uploadProfileMutation = useMutation({
+    mutationFn: (body: BodyUpdate) => UserApi.uploadProfile(body)
+  })
+  const uploadAvata = useMutation({
+    mutationFn: UserApi.uploadAvata
   })
   const profile = ProfileData?.data.data
   const methods = useForm<FormData>({
@@ -52,24 +59,17 @@ export default function Profile() {
     watch,
     setError
   } = methods
-
+  const avatar = watch('avatar')
   useEffect(() => {
     if (profile) {
-      setValue('name', profile.email)
-      setValue('address', profile.address),
-        setValue('phone', profile.phone),
-        setValue('avatar', profile.avatar),
+      setValue('name', profile.name || '')
+      setValue('address', profile.address || ''),
+        setValue('phone', profile.phone || ''),
+        setValue('avatar', profile.avatar || ''),
         setValue('date_of_birth', profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
     }
   }, [profile, setValue])
   // console.log(profile)
-  const uploadProfileMutation = useMutation({
-    mutationFn: (body: BodyUpdate) => UserApi.uploadProfile(body)
-  })
-  const uploadAvata = useMutation({
-    mutationFn: UserApi.uploadAvata
-  })
-  const avatar = watch('avatar')
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -88,6 +88,8 @@ export default function Profile() {
       })
       setProfile(res.data.data)
       saveUser(res.data.data)
+      refetch()
+      toast.success('cập nhật thông tin thành công')
       // console.log(res.data.data)
     } catch (error) {
       if (isAxiosErrorUnprocessableEntity<SuccessResponse<FormDataError>>(error)) {

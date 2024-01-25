@@ -47,6 +47,14 @@ export default function useRouterElement() {
       )
     },
     {
+      path: '*',
+      element: (
+        <MainLayout>
+          <Nopage />
+        </MainLayout>
+      )
+    },
+    {
       path: '',
       element: <RejectedRoute />,
       children: [

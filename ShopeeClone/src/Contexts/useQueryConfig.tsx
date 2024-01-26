@@ -1,7 +1,12 @@
 import { isUndefined, omitBy } from 'lodash'
+import { type } from 'os'
 import React from 'react'
 import useQueryParams from 'src/hooks/useQueryParams'
-import { QueryConfig } from 'src/types/product.type'
+import { ProductListConfig } from 'src/types/product.type'
+
+export type QueryConfig = {
+  [key in keyof ProductListConfig]: string
+}
 
 export default function useQueryConfig() {
   const queryParams: QueryConfig = useQueryParams()

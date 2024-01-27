@@ -1,2 +1,2 @@
-import Profile from 'src/pages/Profile'
+import Profile from './Profile'
 export default Profile

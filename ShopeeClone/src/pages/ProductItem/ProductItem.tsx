@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react'
+import React, { MouseEventHandler, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import Product from '../ProductList/Components/Product'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
@@ -15,6 +15,7 @@ import purchaseApi from 'src/apis/purchase.api'
 import { toast } from 'react-toastify'
 import { purchasesStatus } from 'src/const/purchase'
 import path from 'src/const/path'
+import { AppContext } from 'src/Contexts/app.Contexts'
 
 export default function ProductItem() {
   const { id } = useParams()

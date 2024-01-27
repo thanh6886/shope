@@ -183,7 +183,7 @@ export default function SildeFilter({ queryConfig, categories }: Props) {
       </div>
       <div className='bg-gray-500 h-[2px] my-4' />
       <div className='text-sm'>Đánh giá</div>
-      <RatingStart />
+      <RatingStart queryConfig={queryConfig} />
       <div className='bg-gray-500 h-[2px] my-4' />
       <Button
         className=' bg-orange uppercase w-full h-[32px] text-sm text-white hover:bg-red-600 flex justify-center items-center'
